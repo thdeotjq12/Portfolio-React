@@ -1,6 +1,8 @@
-import React from "react";
+import React , {useEffect} from "react";
 import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
+import { useDispatch } from "react-redux";
+import { LOG_IN } from '../reducers/user';
 const dummy = {
   isLoggedIn: true,
   imagePaths: [],
@@ -14,6 +16,15 @@ const dummy = {
   }]
 };
 const Home = () => {
+  const dispatch = useDispatch();
+  useEffect(()=> {
+    dispatch({
+      type: LOG_IN,
+      data: {
+        nickname :'대섭'
+      },
+    });
+  }, []);
   return (
       <div>
        {dummy.isLoggedIn && <PostForm></PostForm> }

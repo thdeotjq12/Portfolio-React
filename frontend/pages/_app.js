@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import reducer from "../reducers"; 
 import { Provider } from 'react-redux'; // 리덕스 스테이트를 제공해줌(컴포넌트)
 import withRedux from 'next-redux-wrapper'
-import { createStore} from 'redux';
+import { createStore, applyMiddleware, compose} from 'redux';
 
 const Portfolio = ({ Component, store }) => {
   return (
@@ -34,7 +34,10 @@ Portfolio.propTypes = {
 };
 
 export default withRedux((initialState, options) => {
-  const store = createStore(reducer, initialState);
+  const middlewares = [];
+  const enhancer = compose(applyMiddleware(...middlewares), !options.isServer && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f, )
+  const store = createStore(reducer, initialState, enhancer);
   // 여기에 store 커스터마이징
+  
   return store;
 })(Portfolio);// 컴포넌트를 감싸줌(고차 컴포넌트- 기존컴포넌트 확장)
