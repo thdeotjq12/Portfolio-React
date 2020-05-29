@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Form, Input, Checkbox, Button } from "antd";
+import { signUpAction } from "../reducers/user";
+import { useDispatch } from "react-redux";
 // Coustom hook 훅에 기능을 추가해서 새로 만듬 ( 중복방지 등 )
 // useState(hook) 는 커스텀 훅 제외한 곳에서 사용하지 않기
 export const userInput = (initValue = null) => {
@@ -20,6 +22,7 @@ const Signup = () => {
   const [term, setTerm] = useState(false);
   const [passwrodError, setpasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
+  const dispatch = useDispatch()
 
   const onSubmit = useCallback(
     e => {
@@ -37,8 +40,12 @@ const Signup = () => {
       if (!term) {
         return setTermError(true);
       }
-    },
-    [password, passwordCheck, term]
+      dispatch(signUpAction({
+        id,
+        password,
+        nick,
+      }))
+    }, [password, passwordCheck, term]
   );
   const onChangeId = e => {
     setId(e.target.value);

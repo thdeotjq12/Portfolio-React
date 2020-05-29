@@ -1,17 +1,17 @@
 import React, { useState, useCallback } from "react";
 import Link from "next/link";
-import { Menu, Input, Button, Row, Col, Card, Avatar, Form } from "antd";
+import { Input, Button, Form } from "antd";
+import { useDispatch} from 'react-redux';
 import { userInput } from "../pages/signup"; // 커스텀 훅 재사용
+import { loginAction } from "../reducers/user";
 const LoginForm = () => {
   const [id, onChangeId] = userInput("");
   const [password, onChangePassword] = userInput("");
-  const onSubmitForm = useCallback(
-    e => {
+  const dispatch = useDispatch();
+  const onSubmitForm = useCallback(e => {
       e.preventDefault();
-      console.log({ id, password });
-    },
-    [id, password]
-  );
+      dispatch(loginAction);
+    }, [id, password]);
   return (
     <Form onSubmit={onSubmitForm} style={{ padding :'10px'}}>
       <div>
