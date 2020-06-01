@@ -5,9 +5,9 @@ import AppLayout from "../components/AppLayout";
 import PropTypes from "prop-types";
 import reducer from "../reducers"; 
 import { Provider } from 'react-redux'; // 리덕스 스테이트를 제공해줌(컴포넌트)
+import createSagaMiddleware from 'redux-saga';
 import withRedux from 'next-redux-wrapper'
 import { createStore, applyMiddleware, compose} from 'redux';
-import sagaMiddleware from '../sagas/middleware';
 import rootSaga from "../sagas";
 
 const Portfolio = ({ Component, store }) => {
@@ -31,11 +31,12 @@ const Portfolio = ({ Component, store }) => {
 };
 
 Portfolio.propTypes = {
-  Component: PropTypes.elementType, // JSX 에 들어가는 모든것(문자열,컴포넌트,태그,숫자 등)
-  store: PropTypes.object,
+  Component: PropTypes.elementType.isRequired, // JSX 에 들어가는 모든것(문자열,컴포넌트,태그,숫자 등)
+  store: PropTypes.object.isRequired, // isRequired : 필수값( 반드시 props가 존재, 없으면 경고 )
 };
 
-export default withRedux((initialState, options) => {
+const configureStore = (initialState, options) => {
+  const sagaMiddleware = createSagaMiddleware();
   const middlewares = [sagaMiddleware];
   // 보안상 아래 부분은 실 배포용인지 개발용인지 구분
   const enhancer = process.env.NODE_ENV === 'production' ? compose(applyMiddleware(...middlewares),) : compose(applyMiddleware(...middlewares), !options.isServer && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f, ) 
@@ -43,4 +44,6 @@ export default withRedux((initialState, options) => {
   // 여기에 store 커스터마이징
   sagaMiddleware.run(rootSaga);
   return store;
-})(Portfolio);// 컴포넌트를 감싸줌(고차 컴포넌트- 기존컴포넌트 확장)
+}
+
+export default withRedux(configureStore)(Portfolio);// 컴포넌트를 감싸줌(고차 컴포넌트- 기존컴포넌트 확장)
