@@ -110,8 +110,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "react-redux");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_4__);
 var _jsxFileName = "C:\\Users\\Song\\Desktop\\projectpf\\frontend\\pages\\Signup.js";
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
 
 
 
@@ -160,8 +163,15 @@ const Signup = () => {
   } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useDispatch"])();
   const {
-    isSigningUp
+    isSigningUp,
+    me
   } = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(state => state.user);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    if (me) {
+      alert('로그인 성공');
+      next_router__WEBPACK_IMPORTED_MODULE_4___default.a.push('/');
+    }
+  }, [me && me.id]);
   const onSubmit = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
     e.preventDefault();
     console.log({
@@ -217,26 +227,26 @@ const Signup = () => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 77
+      lineNumber: 84
     },
     __self: undefined
   }, __jsx("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 78
+      lineNumber: 85
     },
     __self: undefined
   }, __jsx("label", {
     htmlFor: "user-id",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 79
+      lineNumber: 86
     },
     __self: undefined
   }, "\uC544\uC774\uB514"), __jsx("br", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 80
+      lineNumber: 87
     },
     __self: undefined
   }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Input"], {
@@ -246,20 +256,20 @@ const Signup = () => {
     onChange: onChangeId,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 81
+      lineNumber: 88
     },
     __self: undefined
   })), __jsx("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 89
+      lineNumber: 96
     },
     __self: undefined
   }, __jsx("label", {
     htmlFor: "user-nick",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 90
+      lineNumber: 97
     },
     __self: undefined
   }, "\uB2C9\uB124\uC784"), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Input"], {
@@ -269,26 +279,26 @@ const Signup = () => {
     onChange: onChangeNick,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 91
+      lineNumber: 98
     },
     __self: undefined
   })), __jsx("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 98
+      lineNumber: 105
     },
     __self: undefined
   }, __jsx("label", {
     htmlFor: "user-pass",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 99
+      lineNumber: 106
     },
     __self: undefined
   }, "\uBE44\uBC00\uBC88\uD638"), __jsx("br", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 100
+      lineNumber: 107
     },
     __self: undefined
   }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Input"], {
@@ -299,26 +309,26 @@ const Signup = () => {
     onChange: onChangePassword,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 102
+      lineNumber: 109
     },
     __self: undefined
   })), __jsx("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 110
+      lineNumber: 117
     },
     __self: undefined
   }, __jsx("label", {
     htmlFor: "user-pass-chk",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 111
+      lineNumber: 118
     },
     __self: undefined
   }, "\uBE44\uBC00\uBC88\uD638 \uCCB4\uD06C"), __jsx("br", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 112
+      lineNumber: 119
     },
     __self: undefined
   }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Input"], {
@@ -329,7 +339,7 @@ const Signup = () => {
     onChange: onChangePasswordChk,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 114
+      lineNumber: 121
     },
     __self: undefined
   }), passwrodError && __jsx("div", {
@@ -338,13 +348,13 @@ const Signup = () => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 122
+      lineNumber: 129
     },
     __self: undefined
   }, " \uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.")), __jsx("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 125
+      lineNumber: 132
     },
     __self: undefined
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Checkbox"], {
@@ -353,7 +363,7 @@ const Signup = () => {
     onChange: onChangeTerm,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 126
+      lineNumber: 133
     },
     __self: undefined
   }, "\uB3D9\uC758\uD569\uB2C8\uB2E4."), termError && __jsx("div", {
@@ -362,13 +372,13 @@ const Signup = () => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 130
+      lineNumber: 137
     },
     __self: undefined
   }, " \uC57D\uAD00\uC5D0 \uB3D9\uC758 \uD574\uC8FC\uC138\uC694.")), __jsx("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 133
+      lineNumber: 140
     },
     __self: undefined
   }, __jsx("div", {
@@ -377,7 +387,7 @@ const Signup = () => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 134
+      lineNumber: 141
     },
     __self: undefined
   }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
@@ -386,7 +396,7 @@ const Signup = () => {
     loading: isSigningUp,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 135
+      lineNumber: 142
     },
     __self: undefined
   }, "\uAC00\uC785\uD558\uAE30"))));
@@ -442,7 +452,8 @@ const dummyUser = {
   Post: [],
   Followings: [],
   Followers: [],
-  signUpData: {}
+  signUpData: {},
+  id: 1
 };
 const initialState = {
   isLoggedIn: false,
@@ -600,6 +611,17 @@ module.exports = __webpack_require__(/*! C:\Users\Song\Desktop\projectpf\fronten
 /***/ (function(module, exports) {
 
 module.exports = require("antd");
+
+/***/ }),
+
+/***/ "next/router":
+/*!******************************!*\
+  !*** external "next/router" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("next/router");
 
 /***/ }),
 

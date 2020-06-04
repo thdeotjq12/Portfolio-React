@@ -108,8 +108,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(antd__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "prop-types");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "react-redux");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _reducers_post__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../reducers/post */ "./reducers/post.js");
 var _jsxFileName = "C:\\Users\\Song\\Desktop\\projectpf\\frontend\\components\\PostCard.js";
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
 
 
 
@@ -117,14 +122,61 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 const PostCard = ({
   post
 }) => {
-  return __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
+  const {
+    0: commentFormOpened,
+    1: setCommentFormOpened
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const {
+    0: commentText,
+    1: setCommentText
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
+  const {
+    me
+  } = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(state => state.user);
+  const {
+    commentAdded,
+    isAddingComment
+  } = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(state => state.post);
+  const dispath = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useDispatch"])();
+  const onToggleComment = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(() => {
+    // 댓글창이 펼쳐져 있으면 닫고 펼치는 동작
+    setCommentFormOpened(prev => !prev);
+  }, []);
+  const onSubmitComment = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
+    e.preventDefault();
+
+    if (!me) {
+      return alert('로그인이 필요합니다.');
+    }
+
+    dispath({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["ADD_COMMENT_REQUEST"],
+      data: {
+        postId: post.id
+      }
+    });
+  }, [me && me.id]); // 객체확인 , 객체를 넣지말고 객체의 값을 넣자
+
+  const onChangeCommentText = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
+    setCommentText(e.target.value);
+  }, []);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    setCommentText('');
+  }, [commentAdded === true]);
+  return __jsx("div", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 36
+    },
+    __self: undefined
+  }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
     key: +post.createdAt,
     cover: post.img && __jsx("img", {
       alt: "example",
       src: post.img,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 10
+        lineNumber: 39
       },
       __self: undefined
     }),
@@ -133,7 +185,7 @@ const PostCard = ({
       key: "retweet",
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 12
+        lineNumber: 41
       },
       __self: undefined
     }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
@@ -141,15 +193,16 @@ const PostCard = ({
       key: "heart",
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 13
+        lineNumber: 42
       },
       __self: undefined
     }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
       type: "message",
       key: "message",
+      onClick: onToggleComment,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 14
+        lineNumber: 43
       },
       __self: undefined
     }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
@@ -157,27 +210,27 @@ const PostCard = ({
       key: "ellipsis",
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 15
+        lineNumber: 44
       },
       __self: undefined
     })],
     extra: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 17
+        lineNumber: 46
       },
       __self: undefined
     }, "\uD314\uB85C\uC6B0"),
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 8
+      lineNumber: 37
     },
     __self: undefined
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"].Meta, {
     avatar: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Avatar"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 20
+        lineNumber: 49
       },
       __self: undefined
     }, post.User.nickname[0]),
@@ -185,10 +238,72 @@ const PostCard = ({
     description: post.content,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 19
+      lineNumber: 48
     },
     __self: undefined
-  }));
+  })), commentFormOpened && __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Form"], {
+    onSubmit: onSubmitComment,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 56
+    },
+    __self: undefined
+  }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Form"].Item, {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 57
+    },
+    __self: undefined
+  }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Input"].TextArea, {
+    rows: 4,
+    value: commentText,
+    onChange: onChangeCommentText,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 58
+    },
+    __self: undefined
+  })), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    type: "primary",
+    htmlType: "submit",
+    loading: isAddingComment,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 60
+    },
+    __self: undefined
+  }, "\uC090\uC57D")), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["List"], {
+    header: `${post.Comments ? post.Comments.length : 0} 댓글`,
+    itemLayout: "horizontal",
+    dataSource: post.Comments || [],
+    renderItem: item => __jsx("li", {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 67
+      },
+      __self: undefined
+    }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Comment"], {
+      author: item.User.nickname,
+      avatar: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Avatar"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 70
+        },
+        __self: undefined
+      }, item.User.nickname[0]),
+      content: item.content,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 68
+      },
+      __self: undefined
+    })),
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 62
+    },
+    __self: undefined
+  })));
 };
 
 PostCard.propTypes = {
@@ -218,44 +333,73 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(antd__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "react-redux");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _reducers_post__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducers/post */ "./reducers/post.js");
 var _jsxFileName = "C:\\Users\\Song\\Desktop\\projectpf\\frontend\\components\\PostForm.js";
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
 
+
 const PostForm = () => {
+  const dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useDispatch"])();
   const {
-    imagePaths
+    0: text,
+    1: setText
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
+  const {
+    imagePaths,
+    isAddingPost,
+    postAdded
   } = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useSelector"])(state => state.post);
+  const onsubmitForm = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
+    e.preventDefault(); // 이걸 안하면 새 페이지로 넘어감(싱글폼 들은 꼭 작성)
+
+    dispatch({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_3__["ADD_POST_REQUEST"],
+      data: {
+        text
+      }
+    });
+  }, []);
+  const onChangeText = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
+    setText(e.target.value);
+  }, []); // 게시글 작성될때 작성폼 초기화
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    setText('');
+  }, [postAdded === true]);
   return __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Form"], {
     style: {
       margin: '10px 0 20 px'
     },
     encType: "multipart/form-data",
+    onSubmit: onsubmitForm,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 8
+      lineNumber: 26
     },
     __self: undefined
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Input"].TextArea, {
     maxLength: 140,
     placeholder: "\uC5B4\uB5A4 \uC2E0\uAE30\uD55C \uC77C\uC774 \uC788\uC5C8\uB098\uC694?",
+    value: text,
+    onChange: onChangeText,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 9
+      lineNumber: 27
     },
     __self: undefined
   }), __jsx("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 13
+      lineNumber: 33
     },
     __self: undefined
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 14
+      lineNumber: 34
     },
     __self: undefined
   }, "\uC774\uBBF8\uC9C0 \uC5C5\uB85C\uB4DC"), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
@@ -264,15 +408,16 @@ const PostForm = () => {
       float: "right"
     },
     htmlType: "submit",
+    loading: isAddingPost,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 15
+      lineNumber: 35
     },
     __self: undefined
   }, "\uC9F9\uC9F9")), __jsx("div", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 23
+      lineNumber: 44
     },
     __self: undefined
   }, imagePaths.map(v => {
@@ -283,7 +428,7 @@ const PostForm = () => {
       },
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 26
+        lineNumber: 47
       },
       __self: undefined
     }, __jsx("img", {
@@ -294,19 +439,19 @@ const PostForm = () => {
       alt: v,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 27
+        lineNumber: 48
       },
       __self: undefined
     }), __jsx("div", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 32
+        lineNumber: 53
       },
       __self: undefined
     }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 33
+        lineNumber: 54
       },
       __self: undefined
     }, "\uC81C\uAC70")));
@@ -397,6 +542,241 @@ const Home = () => {
 
 /***/ }),
 
+/***/ "./reducers/post.js":
+/*!**************************!*\
+  !*** ./reducers/post.js ***!
+  \**************************/
+/*! exports provided: initialState, LOAD_MAIN_POSTS_REQUEST, LOAD_MAIN_POSTS_SUCCESS, LOAD_MAIN_POSTS_FAILURE, LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE, LOAD_USER_POSTS_REQUEST, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, REMOVE_IMAGE, ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, LOAD_COMMENT_REQUEST, LOAD_COMMENT_SUCCESS, LOAD_COMMENT_FAILURE, RETWEET_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initialState", function() { return initialState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_MAIN_POSTS_REQUEST", function() { return LOAD_MAIN_POSTS_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_MAIN_POSTS_SUCCESS", function() { return LOAD_MAIN_POSTS_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_MAIN_POSTS_FAILURE", function() { return LOAD_MAIN_POSTS_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_HASHTAG_POSTS_REQUEST", function() { return LOAD_HASHTAG_POSTS_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_HASHTAG_POSTS_SUCCESS", function() { return LOAD_HASHTAG_POSTS_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_HASHTAG_POSTS_FAILURE", function() { return LOAD_HASHTAG_POSTS_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_USER_POSTS_REQUEST", function() { return LOAD_USER_POSTS_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_USER_POSTS_SUCCESS", function() { return LOAD_USER_POSTS_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_USER_POSTS_FAILURE", function() { return LOAD_USER_POSTS_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPLOAD_IMAGES_REQUEST", function() { return UPLOAD_IMAGES_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPLOAD_IMAGES_SUCCESS", function() { return UPLOAD_IMAGES_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPLOAD_IMAGES_FAILURE", function() { return UPLOAD_IMAGES_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_IMAGE", function() { return REMOVE_IMAGE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_POST_REQUEST", function() { return ADD_POST_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_POST_SUCCESS", function() { return ADD_POST_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_POST_FAILURE", function() { return ADD_POST_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LIKE_POST_REQUEST", function() { return LIKE_POST_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LIKE_POST_SUCCESS", function() { return LIKE_POST_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LIKE_POST_FAILURE", function() { return LIKE_POST_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UNLIKE_POST_REQUEST", function() { return UNLIKE_POST_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UNLIKE_POST_SUCCESS", function() { return UNLIKE_POST_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UNLIKE_POST_FAILURE", function() { return UNLIKE_POST_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_COMMENT_REQUEST", function() { return ADD_COMMENT_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_COMMENT_SUCCESS", function() { return ADD_COMMENT_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_COMMENT_FAILURE", function() { return ADD_COMMENT_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENT_REQUEST", function() { return LOAD_COMMENT_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENT_SUCCESS", function() { return LOAD_COMMENT_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENT_FAILURE", function() { return LOAD_COMMENT_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RETWEET_REQUEST", function() { return RETWEET_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RETWEET_SUCCESS", function() { return RETWEET_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RETWEET_FAILURE", function() { return RETWEET_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_POST_REQUEST", function() { return REMOVE_POST_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_POST_SUCCESS", function() { return REMOVE_POST_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_POST_FAILURE", function() { return REMOVE_POST_FAILURE; });
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+const initialState = {
+  mainPosts: [{
+    id: 1,
+    User: {
+      id: 1,
+      nickname: '제로초'
+    },
+    content: '첫번째 게시글',
+    img: 'https://www.google.com/imgres?imgurl=http%3A%2F%2Fnewsimg.hankookilbo.com%2F2019%2F04%2F29%2F201904291390027161_3.jpg&imgrefurl=https%3A%2F%2Fwww.hankookilbo.com%2FNews%2FRead%2F201904291390027161&tbnid=NpMi5nVF1QK1MM&vet=12ahUKEwjR1LT9oPfoAhUEUJQKHa2LAhMQMygBegUIARD-Ag..i&docid=k3mACyoxPXAFMM&w=680&h=448&q=%EA%B3%A0%EC%96%91%EC%9D%B4&ved=2ahUKEwjR1LT9oPfoAhUEUJQKHa2LAhMQMygBegUIARD-Ag',
+    Comments: []
+  }],
+  // 화면에 보일 포스트들
+  imagePaths: [],
+  // 미리보기 이미지 경로
+  addPostErrorReason: false,
+  // 포스트 업로드 실패 사유
+  isAddingPost: false,
+  // 포스트 업로드 중 
+  postAdded: false,
+  // 포스트 업로드 성공
+  isAddingComment: false,
+  addCommentErrorReason: '',
+  commentAdded: false
+};
+const dummyPost = {
+  id: 2,
+  User: {
+    id: 1,
+    nickname: '게스트'
+  },
+  content: '나는 더미입니다.',
+  Comments: []
+};
+const dummyComment = {
+  User: {
+    id: 1,
+    nickname: 'dummy'
+  },
+  createdAt: new Date(),
+  content: '더미 댓글입니다.'
+}; //메인 포스트를 로딩
+
+const LOAD_MAIN_POSTS_REQUEST = 'LOAD_MAIN_POSTS_REQUEST';
+const LOAD_MAIN_POSTS_SUCCESS = 'LOAD_MAIN_POSTS_SUCCESS';
+const LOAD_MAIN_POSTS_FAILURE = 'LOAD_MAIN_POSTS_FAILURE'; //해시태그 검색했을때 결과 로딩
+
+const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
+const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
+const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE'; //사용자가 어떤 게시글을 썼는지 로딩
+
+const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST';
+const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS';
+const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE'; //이미지 업로드
+
+const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE'; //이미지 업로드 취소(동기)
+
+const REMOVE_IMAGE = 'REMOVE_IMAGE'; //포스트 추가
+
+const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
+const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+const ADD_POST_FAILURE = 'ADD_POST_FAILURE'; //포스트에 LIKE 누르는 액션
+
+const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE'; //포스트에 LIKE 취소하는 액션
+
+const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
+const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
+const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE'; //게시글에 댓글 남기기
+
+const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
+const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
+const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE'; //게시글 댓글 불러오기
+
+const LOAD_COMMENT_REQUEST = 'LOAD_COMMENT_REQUEST';
+const LOAD_COMMENT_SUCCESS = 'LOAD_COMMENT_SUCCESS';
+const LOAD_COMMENT_FAILURE = 'LOAD_COMMENT_FAILURE'; //리트윗 하는 액션
+
+const RETWEET_REQUEST = 'RETWEET_REQUEST';
+const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+const RETWEET_FAILURE = 'RETWEET_FAILURE'; //포스트 제거하는 액션
+
+const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
+const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
+const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
+const ADD_DUMMY = 'ADD_DUMMY'; // ????
+
+const addPost = {
+  type: ADD_POST_REQUEST
+};
+const addDummy = {
+  type: ADD_DUMMY,
+  data: {
+    content: 'Hello',
+    UserId: 1,
+    User: {
+      nickname: '제로초'
+    }
+  }
+};
+
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    // 게시글 작성
+    case ADD_POST_REQUEST:
+      {
+        return _objectSpread({}, state, {
+          isAddingPost: true,
+          addPostErrorReason: '',
+          postAdded: false
+        });
+      }
+
+    case ADD_POST_SUCCESS:
+      {
+        return _objectSpread({}, state, {
+          isAddingPost: false,
+          mainPosts: [dummyPost, ...state.mainPosts],
+          postAdded: true
+        });
+      }
+
+    case ADD_POST_FAILURE:
+      {
+        return _objectSpread({}, state, {
+          isAddingPost: false,
+          addPostErrorReason: action.error
+        });
+      }
+    // 댓글 달기
+
+    case ADD_COMMENT_REQUEST:
+      {
+        return _objectSpread({}, state, {
+          isAddingComment: true,
+          addCommentErrorReason: '',
+          commentAdded: false
+        });
+      }
+
+    case ADD_COMMENT_SUCCESS:
+      {
+        // 어떤게시글에 댓글을 추가할지
+        const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
+        const post = state.mainPosts[postIndex];
+        const Comments = [...post.Comments, dummyComment];
+        const mainPosts = [...state.mainPosts];
+        mainPosts[postIndex] = _objectSpread({}, post, {
+          Comments
+        });
+        return _objectSpread({}, state, {
+          isAddingComment: false,
+          mainPosts,
+          commentAdded: true
+        });
+      }
+
+    case ADD_COMMENT_FAILURE:
+      {
+        return _objectSpread({}, state, {
+          isAddingComment: false,
+          addCommentErrorReason: action.error
+        });
+      }
+
+    case ADD_DUMMY:
+      {
+        return _objectSpread({}, state, {
+          mainPosts: [action.data, ...state.mainPosts]
+        });
+      }
+
+    default:
+      {
+        return _objectSpread({}, state);
+      }
+  }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (reducer);
+
+/***/ }),
+
 /***/ "./reducers/user.js":
 /*!**************************!*\
   !*** ./reducers/user.js ***!
@@ -443,7 +823,8 @@ const dummyUser = {
   Post: [],
   Followings: [],
   Followers: [],
-  signUpData: {}
+  signUpData: {},
+  id: 1
 };
 const initialState = {
   isLoggedIn: false,

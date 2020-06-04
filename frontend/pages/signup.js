@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Form, Input, Checkbox, Button } from "antd";
 import { SIGN_UP_REQUEST , isSigningUp } from "../reducers/user";
 import { useDispatch, useSelector } from "react-redux";
+import Router from 'next/router';
 // Coustom hook 훅에 기능을 추가해서 새로 만듬 ( 중복방지 등 )
 // useState(hook) 는 커스텀 훅 제외한 곳에서 사용하지 않기
 export const userInput = (initValue = null) => {
@@ -23,8 +24,14 @@ const Signup = () => {
   const [passwrodError, setpasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
   const dispatch = useDispatch()
-  const { isSigningUp } = useSelector(state =>state.user)
+  const { isSigningUp, me } = useSelector(state =>state.user)
 
+  useEffect(()=>{
+    if(me){
+      alert('로그인 성공');
+      Router.push('/');
+    }
+  },[me && me.id])
   const onSubmit = useCallback(
     e => {
       e.preventDefault();
