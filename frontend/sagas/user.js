@@ -8,8 +8,8 @@ function loginAPI(){
 // (3) 서버에 요청을 보냄
     return axios.post('/login')
 }
-function signUpAPI(){
-    return axios.post('/login')
+function signUpAPI(signUpData){
+    return axios.post('http://localhost:3065/api/user/', signUpData);
 }
     
 function* login(){ 
@@ -27,11 +27,10 @@ function* login(){
         })
     }
 }
-function* signUp(){ 
+function* signUp(action){ 
     
     try{
-        yield call(signUpAPI);
-        throw new Error('에러에러');
+        yield call(signUpAPI , action.data); // 두번째는 첫번째의(함수) 인자값
         yield put({ 
             type:SIGN_UP_SUCCESS
         });

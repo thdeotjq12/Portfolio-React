@@ -2,21 +2,21 @@
   "development": {
     "username": "root",
     "password": "sktkal9",
-    "database": "database_development",
+    "database": "react-pf",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "sktkal9",
-    "database": "database_test",
+    "database": "react-pf",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "sktkal9",
-    "database": "database_production",
+    "database": "react-pf",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }

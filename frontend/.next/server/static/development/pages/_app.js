@@ -5107,9 +5107,9 @@ const Signup = () => {
     return dispatch({
       type: _reducers_user__WEBPACK_IMPORTED_MODULE_2__["SIGN_UP_REQUEST"],
       data: {
-        id,
+        userId: id,
         password,
-        nick
+        nickname: nick
       }
     });
   }, [password, passwordCheck, term]);
@@ -5861,8 +5861,8 @@ function loginAPI() {
   return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/login');
 }
 
-function signUpAPI() {
-  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/login');
+function signUpAPI(signUpData) {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('http://localhost:3065/api/user/', signUpData);
 }
 
 function* login() {
@@ -5881,10 +5881,10 @@ function* login() {
   }
 }
 
-function* signUp() {
+function* signUp(action) {
   try {
-    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(signUpAPI);
-    throw new Error('에러에러');
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(signUpAPI, action.data); // 두번째는 첫번째의(함수) 인자값
+
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
       type: _reducers_user__WEBPACK_IMPORTED_MODULE_1__["SIGN_UP_SUCCESS"]
     });
