@@ -51,12 +51,12 @@ const Signup = () => {
       return dispatch({
         type: SIGN_UP_REQUEST,
         data:{
-        userId: id,
-        password,
-        nickname: nick,
+          userId: id,
+          password,
+          nickname: nick,
         },
       });
-    }, [password, passwordCheck, term]
+    }, [id, nick, password, passwordCheck, term]  // usecallback 안에서는 안에 쓰이는 state 전부 넣어주자
   );
   const onChangeId = e => {
     setId(e.target.value);

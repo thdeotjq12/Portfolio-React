@@ -1,7 +1,6 @@
 const express = require('express');
 const db = require('../models');
 const bcrypt = require('bcrypt');
-const { noExtendLeft } = require('sequelize/types/lib/operators');
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -11,7 +10,7 @@ router.post('/', async (req, res) => { // POST api/user 회원가입
     try {
         const exUser = await db.User.findOne({
             where:{
-                userId: req.body.id,
+                userId: req.body.userId,
             },
         });
         if(exUser){

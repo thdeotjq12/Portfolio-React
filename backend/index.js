@@ -1,6 +1,7 @@
 const express = require('express');
 const db =require('./models');
 const morgan = require('morgan');
+const cors = require('cors');
 const userAPIRouter = require('./routes/user');
 const postAPIRouter = require('./routes/post');
 const postsAPIRouter = require('./routes/post');
@@ -11,9 +12,10 @@ db.sequelize.sync(); // 알아서 models에 있는 테이블 생성해줌
 app.use(express.json()); // json 형식의 데이터 처리
 app.use(express.urlencoded( { extended: true })); // 폼으로 넘어온 데이터 처리 
 
-// 로그남김
+// 서버쪽 로그남김
 app.use(morgan('dev'));
-
+// 서버에러관련
+app.use(cors());
 app.use('/api/user', userAPIRouter);
 app.use('/api/post', postAPIRouter);
 app.use('/api/posts', postsAPIRouter);

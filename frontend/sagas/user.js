@@ -28,7 +28,6 @@ function* login(){
     }
 }
 function* signUp(action){ 
-    
     try{
         yield call(signUpAPI , action.data); // 두번째는 첫번째의(함수) 인자값
         yield put({ 
