@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../models');
 const bcrypt = require('bcrypt');
+const passport = require('passport');
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -36,8 +37,28 @@ router.get('/:id', (req, res) => {
 router.get('/logout', (req, res) => {
 
 });
-router.get('/login', (req, res) => {
-
+router.get('/login', (req, res, next) => { // POST /api/user/login
+    passport.authenticate('local', (err, user, info) =>{
+        // 서버에러
+        if(err){
+            console.error(err);
+            return next(err);
+        }
+        // 로직상 에러
+        if(info){
+            return res.status(401).send(info.reason);
+        }
+        return req.login(user, (loginErr)=> {
+            // 거의없는 경우지만 로그인 에러가 났을 시
+            if(loginErr){
+                return next(loginErr);
+            }
+            // 여기까지 성공하면 user 가 session , cookie 로 저장됨
+            const filteredUser = Object.assign( {}, user);  // 비밀번호를 바로 보내면 위험함
+            delete filteredUser.password;
+            return res.json(filteredUser); // front에 사용자 정보를 json 형태로 보냄
+        });
+    })(req, res, next);
 });
 router.get('/:id/follow', (req, res) => {
 

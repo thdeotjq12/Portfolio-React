@@ -5857,20 +5857,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function loginAPI() {
+function loginAPI(loginData) {
   // (3) 서버에 요청을 보냄
-  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/login');
+  // loginData: userid, password 
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/login', loginData);
 }
 
 function signUpAPI(signUpData) {
   return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('http://localhost:3065/api/user/', signUpData);
 }
 
-function* login() {
+function* login(action) {
   // 사가 패턴 3. 어떤 동작할지 결정
   try {
-    // yield call(loginAPI); // (2)loginAPI 로 요청을 보냄
-    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["delay"])(2000);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(loginAPI, action.data); // (2)loginAPI 로 요청을 보냄
+
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
       type: _reducers_user__WEBPACK_IMPORTED_MODULE_1__["LOG_IN_SUCCESS"]
     }); // (4)put은 dispatch와 동일, call이 성공하면 LOG_IN_SUCCESS 실행

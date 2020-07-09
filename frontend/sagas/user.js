@@ -4,19 +4,19 @@ import axios from 'axios';
 import { func } from 'prop-types';
 
 
-function loginAPI(){
+function loginAPI(loginData){
 // (3) 서버에 요청을 보냄
-    return axios.post('/login')
+    // loginData: userid, password 
+    return axios.post('/login', loginData)
 }
 function signUpAPI(signUpData){
     return axios.post('http://localhost:3065/api/user/', signUpData);
 }
     
-function* login(){ 
+function* login(action){ 
     // 사가 패턴 3. 어떤 동작할지 결정
     try{
-        // yield call(loginAPI); // (2)loginAPI 로 요청을 보냄
-        yield delay(2000);
+        yield call(loginAPI, action.data); // (2)loginAPI 로 요청을 보냄
         yield put({ 
             type:LOG_IN_SUCCESS
         }); // (4)put은 dispatch와 동일, call이 성공하면 LOG_IN_SUCCESS 실행
