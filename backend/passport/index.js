@@ -8,7 +8,7 @@ module.exports = () => {
     passport.serializeUser( (user, done) =>{ 
         return done(null, user.id);
     });
-    // 2. 프론트에서 받은 쿠키로 서버에서 id를 가져와 유저정보를 찾는다.
+    // 2. 프론트에서 받은 쿠키로 서버에서 id를 가져와 유저정보를 찾는다. (1번 요청보낼때마다 매번 실행, 실무에서는 결과물 캐싱해줌)
     passport.deserializeUser( async (id, done) =>{
         try{
             const user = await db.User.findOne({

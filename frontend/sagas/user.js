@@ -1,16 +1,17 @@
 import { all, fork, takeLatest, takeEvery, call, put, take, delay } from 'redux-saga/effects';
 import { LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, signUpAction } from '../reducers/user';
 import axios from 'axios';
-import { func } from 'prop-types';
 
+
+axios.defaults.baseURL = 'http://localhost:3065/api';
 
 function loginAPI(loginData){
 // (3) 서버에 요청을 보냄
     // loginData: userid, password 
-    return axios.post('/login', loginData)
+    return axios.post('/user/login', loginData)
 }
 function signUpAPI(signUpData){
-    return axios.post('http://localhost:3065/api/user/', signUpData);
+    return axios.post('/user/', signUpData);
 }
     
 function* login(action){ 

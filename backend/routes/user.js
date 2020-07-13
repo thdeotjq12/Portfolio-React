@@ -38,6 +38,7 @@ router.get('/logout', (req, res) => {
 
 });
 router.get('/login', (req, res, next) => { // POST /api/user/login
+    console.log('여기얌~~!!!');
     passport.authenticate('local', (err, user, info) =>{
         // 서버에러
         if(err){
@@ -54,7 +55,7 @@ router.get('/login', (req, res, next) => { // POST /api/user/login
                 return next(loginErr);
             }
             // 여기까지 성공하면 user 가 session , cookie 로 저장됨
-            const filteredUser = Object.assign( {}, user);  // 비밀번호를 바로 보내면 위험함
+            const filteredUser = Object.assign( {}, user.toJSON());  // 비밀번호를 바로 보내면 위험함
             delete filteredUser.password;
             return res.json(filteredUser); // front에 사용자 정보를 json 형태로 보냄
         });

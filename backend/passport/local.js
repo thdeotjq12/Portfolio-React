@@ -6,8 +6,8 @@ const db = require('../models');
 
 module.exports = () => {
     passport.use(new LocalStrategy({
-        usernameField: '',
-        passwordField: '',
+        usernameField: 'userId',
+        passwordField: 'password',
     }, async (userId , password, done) => {
         try{
             const user = await db.User.findOne({ where: { userId}});

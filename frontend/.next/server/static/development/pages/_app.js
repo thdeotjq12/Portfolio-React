@@ -295,7 +295,7 @@ const LoginForm = () => {
     dispatch({
       type: _reducers_user__WEBPACK_IMPORTED_MODULE_5__["LOG_IN_REQUEST"],
       data: {
-        id,
+        userId: id,
         password
       }
     });
@@ -5850,21 +5850,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "axios");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! prop-types */ "prop-types");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
-
+axios__WEBPACK_IMPORTED_MODULE_2___default.a.defaults.baseURL = 'http://localhost:3065/api';
 
 function loginAPI(loginData) {
   // (3) 서버에 요청을 보냄
   // loginData: userid, password 
-  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/login', loginData);
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/user/login', loginData);
 }
 
 function signUpAPI(signUpData) {
-  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('http://localhost:3065/api/user/', signUpData);
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/user/', signUpData);
 }
 
 function* login(action) {
