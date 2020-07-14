@@ -7,8 +7,10 @@ axios.defaults.baseURL = 'http://localhost:3065/api';
 
 function loginAPI(loginData){
 // (3) 서버에 요청을 보냄
-    // loginData: userid, password 
-    return axios.post('/user/login', loginData)
+    // loginData: userid, password
+    return axios.post('/user/login', loginData , {
+        withCredentials: true, // (프론트)쿠키를 주고받을 수 있음, 서버쪽은 cors 로 설정
+    });
 }
 function signUpAPI(signUpData){
     return axios.post('/user/', signUpData);
@@ -17,9 +19,10 @@ function signUpAPI(signUpData){
 function* login(action){ 
     // 사가 패턴 3. 어떤 동작할지 결정
     try{
-        yield call(loginAPI, action.data); // (2)loginAPI 로 요청을 보냄
+        const result =  yield call(loginAPI, action.data); // (2)loginAPI 로 요청을 보냄
         yield put({ 
-            type:LOG_IN_SUCCESS
+            type: LOG_IN_SUCCESS,
+            data: result.data,
         }); // (4)put은 dispatch와 동일, call이 성공하면 LOG_IN_SUCCESS 실행
     }catch(e){
         console.error(e);

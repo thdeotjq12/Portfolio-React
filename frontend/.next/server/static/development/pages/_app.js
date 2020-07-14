@@ -448,46 +448,7 @@ const UserProfile = () => {
     });
   }, []);
   return __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
-    actions: [__jsx("div", {
-      key: "twit",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 19
-      },
-      __self: undefined
-    }, "\uC9F9\uC7AD", __jsx("br", {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 21
-      },
-      __self: undefined
-    }), me.Post.length), __jsx("div", {
-      key: "followings",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 24
-      },
-      __self: undefined
-    }, "\uD314\uB85C\uC789", __jsx("br", {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 26
-      },
-      __self: undefined
-    }), me.Followings.length), __jsx("div", {
-      key: "followers",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 29
-      },
-      __self: undefined
-    }, "\uD314\uB85C\uC6CC", __jsx("br", {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 31
-      },
-      __self: undefined
-    }), me.Followers.length)],
+    actions: [],
     __source: {
       fileName: _jsxFileName,
       lineNumber: 17
@@ -497,21 +458,21 @@ const UserProfile = () => {
     avatar: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Avatar"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 37
+        lineNumber: 23
       },
       __self: undefined
     }, me.nickname[0]),
     title: me.nickname,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 36
+      lineNumber: 22
     },
     __self: undefined
   }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     onClick: onLogout,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 40
+      lineNumber: 26
     },
     __self: undefined
   }, "\uB85C\uADF8\uC544\uC6C3"));
@@ -5704,7 +5665,7 @@ const reducer = (state = initialState, action) => {
         return _objectSpread({}, state, {
           isLoggingIn: false,
           isLoggedIn: true,
-          me: dummyUser,
+          me: action.data,
           isLoading: false
         });
       }
@@ -5857,8 +5818,11 @@ axios__WEBPACK_IMPORTED_MODULE_2___default.a.defaults.baseURL = 'http://localhos
 
 function loginAPI(loginData) {
   // (3) 서버에 요청을 보냄
-  // loginData: userid, password 
-  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/user/login', loginData);
+  // loginData: userid, password
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/user/login', loginData, {
+    withCredentials: true // (프론트)쿠키를 주고받을 수 있음, 서버쪽은 cors 로 설정
+
+  });
 }
 
 function signUpAPI(signUpData) {
@@ -5868,10 +5832,11 @@ function signUpAPI(signUpData) {
 function* login(action) {
   // 사가 패턴 3. 어떤 동작할지 결정
   try {
-    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(loginAPI, action.data); // (2)loginAPI 로 요청을 보냄
+    const result = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(loginAPI, action.data); // (2)loginAPI 로 요청을 보냄
 
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
-      type: _reducers_user__WEBPACK_IMPORTED_MODULE_1__["LOG_IN_SUCCESS"]
+      type: _reducers_user__WEBPACK_IMPORTED_MODULE_1__["LOG_IN_SUCCESS"],
+      data: result.data
     }); // (4)put은 dispatch와 동일, call이 성공하면 LOG_IN_SUCCESS 실행
   } catch (e) {
     console.error(e);

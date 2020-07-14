@@ -35,10 +35,11 @@ router.get('/:id', (req, res) => {
 
 });
 router.get('/logout', (req, res) => {
-
+    req.logout();
+    req.session.destroy();
+    res.send('logout 성공');
 });
-router.get('/login', (req, res, next) => { // POST /api/user/login
-    console.log('여기얌~~!!!');
+router.post('/login', (req, res, next) => { // POST /api/user/login
     passport.authenticate('local', (err, user, info) =>{
         // 서버에러
         if(err){
@@ -57,7 +58,7 @@ router.get('/login', (req, res, next) => { // POST /api/user/login
             // 여기까지 성공하면 user 가 session , cookie 로 저장됨
             const filteredUser = Object.assign( {}, user.toJSON());  // 비밀번호를 바로 보내면 위험함
             delete filteredUser.password;
-            return res.json(filteredUser); // front에 사용자 정보를 json 형태로 보냄
+            return res.json(filteredUser); // front에 사용자 정보를 json 형태로 보냄, saga에서 loginSuccess 로 이어짐
         });
     })(req, res, next);
 });
