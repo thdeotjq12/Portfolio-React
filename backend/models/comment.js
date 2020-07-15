@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) =>{
       collate: 'utf8mb4_general_ci', // 한글이 저장됨
   });
   Comment.associate = (db) => {
-      db.Comment.belongTo(db.User);
-      db.Comment.belongTo(db.Post);
+      db.Comment.belongsTo(db.User);
+      db.Comment.belongsTo(db.Post);
   };
   return Comment;
 }

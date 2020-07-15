@@ -50,15 +50,38 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
         if(info){
             return res.status(401).send(info.reason);
         }
-        return req.login(user, (loginErr)=> {
+        return req.login(user, async (loginErr)=> {
             // 거의없는 경우지만 로그인 에러가 났을 시
-            if(loginErr){
-                return next(loginErr);
+            try{
+                if(loginErr){
+                    return next(loginErr);
+                }
+                // 여기까지 성공하면 user 가 session , cookie 로 저장됨
+                const fullUser = await db.User.findOne({
+                    where:{ id: user.id},
+                    include:[{
+                        model: db.Post,
+                        as:'Posts',
+                        attributes:['id'],
+                    },{
+                        model:db.User,
+                        as: 'Followings',
+                        attributes:['id'],
+                    },{
+                        model: db.User,
+                        as: 'Followers',
+                        attributes:['id'],
+                    }],
+                    attributes: ['id', 'nickname', 'userId'], // 프론트에 password 를 제외하고 보내줄 것들
+
+                });
+                console.log(fullUser);
+                
+                return res.json(fullUser); // front에 사용자 정보를 json 형태로 보냄, saga에서 loginSuccess 로 이어짐
+            }catch(e){
+
             }
-            // 여기까지 성공하면 user 가 session , cookie 로 저장됨
-            const filteredUser = Object.assign( {}, user.toJSON());  // 비밀번호를 바로 보내면 위험함
-            delete filteredUser.password;
-            return res.json(filteredUser); // front에 사용자 정보를 json 형태로 보냄, saga에서 loginSuccess 로 이어짐
+                
         });
     })(req, res, next);
 });
