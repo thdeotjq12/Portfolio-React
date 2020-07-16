@@ -9,11 +9,11 @@ const Home = () => {
   const {user , isLoggedIn} = useSelector(state => state.user);
   const { mainPosts } = useSelector(state => state.post);
   console.log(user)
-  useEffect(()=> {
-    dispatch({
-      type: SIGN_UP_REQUEST,
-    });
-  }, []);
+  // useEffect(()=> {
+  //   dispatch({
+  //     type: SIGN_UP_REQUEST,
+  //   });
+  // }, []);
   return (
       <div>
         {user ? <div>로그인 했습니다 : { user.nickname }</div> : <div>로그아웃 했습니다.</div> }

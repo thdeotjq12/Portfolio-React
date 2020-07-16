@@ -4,8 +4,14 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-
+router.get('/', (req, res) => { // /api/user
+    if(!req.user){
+        return res.status(401).send('로그인이 필요합니다.');
+    }
+    // 패스워드 정보는 볼수 있기 때문에 삭제
+    const user = Object.assign( {}, req.user.toJSON());
+    delete user.password;
+    return res.json(user);
 });
 router.post('/', async (req, res) => { // POST api/user 회원가입
     try {
@@ -79,9 +85,8 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
                 
                 return res.json(fullUser); // front에 사용자 정보를 json 형태로 보냄, saga에서 loginSuccess 로 이어짐
             }catch(e){
-
+                next(e);
             }
-                
         });
     })(req, res, next);
 });

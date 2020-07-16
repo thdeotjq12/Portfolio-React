@@ -495,12 +495,12 @@ const Home = () => {
   const {
     mainPosts
   } = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(state => state.post);
-  console.log(user);
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    dispatch({
-      type: _reducers_user__WEBPACK_IMPORTED_MODULE_4__["SIGN_UP_REQUEST"]
-    });
-  }, []);
+  console.log(user); // useEffect(()=> {
+  //   dispatch({
+  //     type: SIGN_UP_REQUEST,
+  //   });
+  // }, []);
+
   return __jsx("div", {
     __source: {
       fileName: _jsxFileName,
@@ -827,8 +827,6 @@ const dummyUser = {
   id: 1
 };
 const initialState = {
-  isLoggedIn: false,
-  // 로그인 여부
   isLoggingOut: false,
   // 로그아웃 시도중
   isLoggingIn: false,
@@ -900,7 +898,6 @@ const reducer = (state = initialState, action) => {
       {
         return _objectSpread({}, state, {
           isLoggingIn: false,
-          isLoggedIn: true,
           me: action.data,
           isLoading: false
         });
@@ -910,7 +907,6 @@ const reducer = (state = initialState, action) => {
       {
         return _objectSpread({}, state, {
           isLoggingIn: false,
-          isLoggedIn: false,
           logInErrorReason: action.error,
           me: null
         });
@@ -919,7 +915,15 @@ const reducer = (state = initialState, action) => {
     case LOG_OUT_REQUEST:
       {
         return _objectSpread({}, state, {
-          isLoggedIn: false,
+          isLoggingOut: true // 로그아웃버튼 로딩
+
+        });
+      }
+
+    case LOG_OUT_REQUEST:
+      {
+        return _objectSpread({}, state, {
+          isLoggingOut: false,
           me: null
         });
       }
@@ -949,6 +953,23 @@ const reducer = (state = initialState, action) => {
           isSigningUp: false,
           singUpErrorReason: action.error
         });
+      }
+
+    case LOAD_USER_REQUEST:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case LOAD_USER_SUCCESS:
+      {
+        return _objectSpread({}, state, {
+          me: action.data
+        });
+      }
+
+    case LOAD_USER_FAILURE:
+      {
+        return _objectSpread({}, state);
       }
 
     default:

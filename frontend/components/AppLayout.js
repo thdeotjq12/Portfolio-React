@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { Menu, Input, Row, Col } from "antd";
 import LoginForm from "../components/LoginForm";
 import PropTypes from "prop-types";
 import UserProfile from "./UserProfile";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { LOAD_USER_REQUEST } from "../reducers/user";
 
 const AppLayout = ({ children }) => {
-  const { isLoggedIn} = useSelector(state => state.user);
+  const {  me } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    if(!me){
+      dispatch({
+        type: LOAD_USER_REQUEST,
+      });
+    }
+  }, []);
   return (
     <div>
       <Menu mode="horizontal">
@@ -36,8 +45,7 @@ const AppLayout = ({ children }) => {
       <Row gutter={8}>
         {/* xs=작은화면일때, md=큰 화면일때 비율(24가 최대) */}
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile/>
-           
+          {me ? <UserProfile/>
           : (
             <LoginForm></LoginForm>
           )}
