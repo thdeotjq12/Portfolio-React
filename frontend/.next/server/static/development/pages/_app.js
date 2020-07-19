@@ -471,7 +471,7 @@ const UserProfile = () => {
         lineNumber: 19
       },
       __self: undefined
-    }), me.Posts.length), __jsx("div", {
+    }), me.Posts ? me.Posts.length : 0), __jsx("div", {
       key: "following",
       __source: {
         fileName: _jsxFileName,
@@ -484,7 +484,7 @@ const UserProfile = () => {
         lineNumber: 20
       },
       __self: undefined
-    }), me.Followings.length), __jsx("div", {
+    }), me.Followings ? me.Followings.length : 0), __jsx("div", {
       key: "follower",
       __source: {
         fileName: _jsxFileName,
@@ -497,7 +497,7 @@ const UserProfile = () => {
         lineNumber: 21
       },
       __self: undefined
-    }), me.Followers.length)],
+    }), me.Followers ? me.Followers.length : 0)],
     __source: {
       fileName: _jsxFileName,
       lineNumber: 17
@@ -5524,7 +5524,7 @@ const reducer = (state = initialState, action) => {
       {
         return _objectSpread({}, state, {
           isAddingPost: false,
-          mainPosts: [dummyPost, ...state.mainPosts],
+          mainPosts: [action.data, ...state.mainPosts],
           postAdded: true
         });
       }
@@ -5572,11 +5572,23 @@ const reducer = (state = initialState, action) => {
         });
       }
 
-    case ADD_DUMMY:
+    case LOAD_MAIN_POSTS_REQUEST:
       {
         return _objectSpread({}, state, {
-          mainPosts: [action.data, ...state.mainPosts]
+          mainPosts: []
         });
+      }
+
+    case LOAD_MAIN_POSTS_SUCCESS:
+      {
+        return _objectSpread({}, state, {
+          mainPosts: action.data
+        });
+      }
+
+    case LOAD_MAIN_POSTS_FAILURE:
+      {
+        return _objectSpread({}, state);
       }
 
     default:
@@ -5810,8 +5822,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./user */ "./sagas/user.js");
 /* harmony import */ var _post__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./post */ "./sagas/post.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
 
 
+
+
+axios__WEBPACK_IMPORTED_MODULE_3___default.a.defaults.baseURL = 'http://localhost:3065/api'; // 한번 불러온 모듈은 캐싱이 되서, 모든 axios에 적용됨(다른곳에 선언하지 않아도됨)
 
 function* rootSaga() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(_user__WEBPACK_IMPORTED_MODULE_1__["default"]), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(_post__WEBPACK_IMPORTED_MODULE_2__["default"])]);
@@ -5833,10 +5850,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux-saga/effects */ "redux-saga/effects");
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _reducers_post__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../reducers/post */ "./reducers/post.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! antd */ "antd");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(antd__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
-function addCommentAPI() {}
+
+
+function addPostAPI(postData) {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/post', postData, {
+    withCredentials: true //로그인한 사람만 글을 쓸 수 있어서 쿠키를 같이 보내줌(로그인 인증을 했는지 여부 검토)
+
+  });
+}
+
+function* addPost(action) {
+  try {
+    const result = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(addPostAPI, action.data);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["ADD_POST_SUCCESS"],
+      data: result.data
+    });
+  } catch (e) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["ADD_POST_FAILURE"],
+      error: e
+    });
+  }
+}
+
+function* watchAddPost() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["ADD_POST_REQUEST"], addPost);
+}
+
+function addCommentAPI() {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/posts');
+}
 
 function* addComment(action) {
   try {
@@ -5855,12 +5906,35 @@ function* addComment(action) {
   }
 }
 
-function* watchAddPost() {
-  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["ADD_COMMENT_REQUEST"], addComment);
+function* watchAddComment() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_MAIN_POSTS_REQUEST"], addComment);
+}
+
+function loadMainPostsAPI() {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/posts'); // 게시글을 보는정도의 api는 크리덴셜 안넣어줘도 무방
+}
+
+function* loadMainPosts() {
+  try {
+    const result = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(loadMainPostsAPI);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_MAIN_POSTS_SUCCESS"],
+      data: result.data
+    });
+  } catch (e) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_MAIN_POSTS_FAILURE"],
+      error: e
+    });
+  }
+}
+
+function* watchloadMainPosts() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_MAIN_POSTS_REQUEST"], loadMainPosts);
 }
 
 function* postSaga() {
-  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddPost)]);
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddPost), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddComment), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchloadMainPosts)]);
 }
 ;
 
@@ -5883,8 +5957,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
 
 
-
-axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.baseURL = 'http://localhost:3065/api'; // 로그인 부분 -------------------------------------
+ // 로그인 부분 -------------------------------------
 
 function logInAPI(loginData) {
   // (3) 서버에 요청을 보냄

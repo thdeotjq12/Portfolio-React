@@ -40,7 +40,7 @@ router.post('/', async (req, res) => { // POST api/user 회원가입
 router.get('/:id', (req, res) => {
 
 });
-router.get('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
     req.logout();
     req.session.destroy();
     res.send('logout 성공');

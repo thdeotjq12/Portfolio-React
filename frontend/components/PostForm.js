@@ -8,13 +8,16 @@ const PostForm = () => {
   const { imagePaths, isAddingPost, postAdded } = useSelector(state => state.post);
   const onsubmitForm = useCallback((e)=>{
     e.preventDefault(); // 이걸 안하면 새 페이지로 넘어감(싱글폼 들은 꼭 작성)
+    if(!text || !text.trim()){
+      return alert('게시글을 작성해주세요!');
+    }
     dispatch({
       type: ADD_POST_REQUEST,
       data:{
-        text,
+        content: text.trim(),
       },
     });
-  },[]);
+  },[text]);
   const onChangeText= useCallback((e)=>{
     setText(e.target.value);
   },[]);

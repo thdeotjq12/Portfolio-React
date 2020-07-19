@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) =>{
       charset: 'utf8',
       collate: 'utf8_general_ci', // 한글이 저장됨
   });
+  //5-16 7:35초 설명
   User.associate = (db) => {
       db.User.hasMany(db.Post, {as: 'Posts' });
       db.User.hasMany(db.Comment);

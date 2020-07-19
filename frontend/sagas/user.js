@@ -5,8 +5,6 @@ import { LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
          LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
          LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE} from '../reducers/user';
 
-axios.defaults.baseURL = 'http://localhost:3065/api';
-
 // 로그인 부분 -------------------------------------
 function logInAPI(loginData){
 // (3) 서버에 요청을 보냄
