@@ -49,7 +49,7 @@ User.propTypes = {
 }
 
 User.getInitialProps = async (context) => {
-    context.log('hashtag props' , context.query.tag); // 서버에서 라우팅받은 정보가 넘어오는지 확인, _app.js에서 또 추가해줌
+    console.log('hashtag props on user.js' , context.query.id); // 서버에서 라우팅받은 정보가 넘어오는지 확인, _app.js에서 또 추가해줌
     return { id: parseInt(context.query.id, 10) } // 1. 이러면 컴포넌트의 props에도 전달이 가능함 : 서버>getInitialProps> User.props 
 };
 export default User;

@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -154,10 +154,11 @@ const PostCard = ({
     dispath({
       type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["ADD_COMMENT_REQUEST"],
       data: {
-        postId: post.id
+        postId: post.id,
+        content: commentText
       }
     });
-  }, [me && me.id]); // 객체확인 , 객체를 넣지말고 객체의 값을 넣자
+  }, [me && me.id, commentText]); // 객체확인 , 객체를 넣지말고 객체의 값을 넣자
 
   const onChangeCommentText = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
     setCommentText(e.target.value);
@@ -187,12 +188,27 @@ const PostCard = ({
     })],
     extra: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], null, "\uD314\uB85C\uC6B0")
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"].Meta, {
-    avatar: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Avatar"], null, post.User.nickname[0]),
+    avatar: __jsx(next_link__WEBPACK_IMPORTED_MODULE_5___default.a, {
+      href: {
+        pathname: '/user',
+        query: {
+          id: post.User.id
+        }
+      },
+      as: `/user/${post.User.id}`
+    }, __jsx("a", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Avatar"], null, post.User.nickname[0]))) // <a> 태그를 윗줄로 올리면 무한 GET 에러남 , 이유 모름....
+    ,
     title: post.User.nickname,
     description: __jsx("div", null, post.content.split(/(#[^\s]+)/g).map(v => {
       if (v.match(/#[^\s]+/)) {
         return __jsx(next_link__WEBPACK_IMPORTED_MODULE_5___default.a, {
-          href: "/hashtag",
+          href: {
+            pathname: '/hashtag',
+            query: {
+              tag: v.slice(1)
+            }
+          },
+          as: `/hashtag/${v.slice}`,
           key: v
         }, __jsx("a", null, v));
       }
@@ -216,7 +232,15 @@ const PostCard = ({
     dataSource: post.Comments || [],
     renderItem: item => __jsx("li", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Comment"], {
       author: item.User.nickname,
-      avatar: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Avatar"], null, item.User.nickname[0]),
+      avatar: __jsx(next_link__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        href: {
+          pathname: '/user',
+          query: {
+            id: item.User.id
+          }
+        },
+        as: `/user/${item.User.id}`
+      }, __jsx("a", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Avatar"], null, item.User.nickname[0]))),
       content: item.content
     }))
   })));
@@ -228,7 +252,7 @@ PostCard.propTypes = {
     content: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
     img: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
     createdAt: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object
-  })
+  }).isRequired
 };
 /* harmony default export */ __webpack_exports__["default"] = (PostCard);
 
@@ -4628,11 +4652,11 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 const Hashtag = ({
   tag
 }) => {
-  console.log(tag);
+  console.log("해쉬태그 페이지 tag:", tag);
   const dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useDispatch"])();
   const {
     mainPosts
-  } = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useSelector"])(state => state.user);
+  } = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useSelector"])(state => state.post);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     dispatch({
       type: _reducers_post__WEBPACK_IMPORTED_MODULE_3__["LOAD_HASHTAG_POSTS_REQUEST"],
@@ -4651,7 +4675,7 @@ Hashtag.propTypes = {
 };
 
 Hashtag.getInitialProps = async context => {
-  console.log('hashtag props', context.query.tag); // 서버에서 라우팅받은 정보가 넘어오는지 확인, _app.js에서 또 추가해줌
+  console.log('hashtag props on hastag.js', context.query.tag, context); // 서버에서 라우팅받은 정보가 넘어오는지 확인, _app.js에서 또 추가해줌
 
   return {
     tag: context.query.tag
@@ -4854,6 +4878,8 @@ const reducer = (state = initialState, action) => {
       }
 
     case LOAD_MAIN_POSTS_REQUEST:
+    case LOAD_HASHTAG_POSTS_REQUEST:
+    case LOAD_USER_POSTS_REQUEST:
       {
         return _objectSpread({}, state, {
           mainPosts: []
@@ -4861,6 +4887,8 @@ const reducer = (state = initialState, action) => {
       }
 
     case LOAD_MAIN_POSTS_SUCCESS:
+    case LOAD_HASHTAG_POSTS_SUCCESS:
+    case LOAD_USER_POSTS_SUCCESS:
       {
         return _objectSpread({}, state, {
           mainPosts: action.data
@@ -4868,6 +4896,8 @@ const reducer = (state = initialState, action) => {
       }
 
     case LOAD_MAIN_POSTS_FAILURE:
+    case LOAD_HASHTAG_POSTS_FAILURE:
+    case LOAD_USER_POSTS_FAILURE:
       {
         return _objectSpread({}, state);
       }
@@ -4883,7 +4913,7 @@ const reducer = (state = initialState, action) => {
 
 /***/ }),
 
-/***/ 4:
+/***/ 5:
 /*!********************************!*\
   !*** multi ./pages/hashtag.js ***!
   \********************************/

@@ -40,7 +40,7 @@ Portfolio.getInitialProps = async(context) =>{
   console.log(context);
   const { ctx, Component } = context;
   let pageProps = {};
-  if(context.Component.getInitialProps){
+  if(Component.getInitialProps){
     pageProps = await Component.getInitialProps(ctx);  // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)
   }
   return { pageProps };

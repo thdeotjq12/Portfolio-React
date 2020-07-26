@@ -4754,7 +4754,7 @@ Portfolio.getInitialProps = async context => {
   } = context;
   let pageProps = {};
 
-  if (context.Component.getInitialProps) {
+  if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx); // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)
   }
 
@@ -5183,6 +5183,8 @@ const reducer = (state = initialState, action) => {
       }
 
     case LOAD_MAIN_POSTS_REQUEST:
+    case LOAD_HASHTAG_POSTS_REQUEST:
+    case LOAD_USER_POSTS_REQUEST:
       {
         return _objectSpread({}, state, {
           mainPosts: []
@@ -5190,6 +5192,8 @@ const reducer = (state = initialState, action) => {
       }
 
     case LOAD_MAIN_POSTS_SUCCESS:
+    case LOAD_HASHTAG_POSTS_SUCCESS:
+    case LOAD_USER_POSTS_SUCCESS:
       {
         return _objectSpread({}, state, {
           mainPosts: action.data
@@ -5197,6 +5201,8 @@ const reducer = (state = initialState, action) => {
       }
 
     case LOAD_MAIN_POSTS_FAILURE:
+    case LOAD_HASHTAG_POSTS_FAILURE:
+    case LOAD_USER_POSTS_FAILURE:
       {
         return _objectSpread({}, state);
       }
@@ -5462,9 +5468,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reducers_post__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../reducers/post */ "./reducers/post.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "axios");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! antd */ "antd");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(antd__WEBPACK_IMPORTED_MODULE_3__);
-
 
 
 
@@ -5518,7 +5521,8 @@ function* addComment(action) {
 
 function* watchAddComment() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_MAIN_POSTS_REQUEST"], addComment);
-}
+} //
+
 
 function loadMainPostsAPI() {
   return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/posts'); // 게시글을 보는정도의 api는 크리덴셜 안넣어줘도 무방
@@ -5541,10 +5545,63 @@ function* loadMainPosts() {
 
 function* watchloadMainPosts() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_MAIN_POSTS_REQUEST"], loadMainPosts);
+} //
+
+
+function loadHashtagPostsAPI(tag) {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(`/hashtag/${tag}`);
+} // function loadHashtagPostsAPI(data) {
+//     console.log("COME", encodeURIComponent(data));
+//     return axios.get(`/hashtag/${encodeURIComponent(data)}`);
+//   }
+
+
+function* loadHashtagPosts(action) {
+  try {
+    const result = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(loadHashtagPostsAPI, action.data);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_HASHTAG_POSTS_SUCCESS"],
+      data: result.data
+    });
+  } catch (e) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_HASHTAG_POSTS_FAILURE"],
+      error: e
+    });
+  }
 }
 
+function* watchLoadHashtagPosts() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_HASHTAG_POSTS_REQUEST"], loadHashtagPosts);
+} //
+
+
+function loadUserPostsAPI(id) {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(`/user/${id}/posts`); // 게시글을 보는정도의 api는 크리덴셜 안넣어줘도 무방
+}
+
+function* loadUserPosts(action) {
+  try {
+    const result = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(loadUserPostsAPI, action.data);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_USER_POSTS_SUCCESS"],
+      data: result.data
+    });
+  } catch (e) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_USER_POSTS_FAILURE"],
+      error: e
+    });
+  }
+}
+
+function* watchLoadUserPosts() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["LOAD_USER_POSTS_REQUEST"], loadUserPosts);
+} //
+
+
 function* postSaga() {
-  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddPost), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddComment), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchloadMainPosts)]);
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddPost), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddComment), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchloadMainPosts), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLoadHashtagPosts), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLoadUserPosts)]);
 }
 ;
 

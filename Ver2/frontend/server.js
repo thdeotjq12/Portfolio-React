@@ -25,20 +25,20 @@ app.prepare().then( ()=> {
     server.use(expresSession({
         resave: false,
         saveUninitialized : false,
-        secret: '',
+        secret: process.env.COOKIE_SECRET,
         cookie:{
             httpOnly: true,
             secure: false,
         },
     }));
-    server.get('/hashtag/:tag', (req,res)=>{
-        return app.render(req,res, '/hashtag',{tag: req.params.tag}); // next의 render 기능으로 라우팅함
+    server.get('/hashtag/:tag', (req, res)=>{
+        return app.render(req, res, '/hashtag',{tag: req.params.tag}); // next의 render 기능으로 라우팅함
     });
-    server.get('/user/:tag', (req,res)=>{
-        return app.render(req,res, '/user',{id: req.params.id}) // 두번째 인자값은 해당 페이지로 넘어감
+    server.get('/user/:id', (req, res)=>{
+        return app.render(req, res, '/user',{id: req.params.id}) // 두번째 인자값은 해당 페이지로 넘어감
     });
-    server.get('*', (req,res)=>{ // * : 모든요청을 여기서 처리 
-        return handle(req,res);
+    server.get('*', (req, res)=>{ // * : 모든요청을 여기서 처리 
+        return handle(req, res);
     })
     server.listen(3060, ()=>{
         console.log('next+express running on port 3060');
