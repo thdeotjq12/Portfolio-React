@@ -48,9 +48,9 @@ export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 //게시글 댓글 불러오기
-export const LOAD_COMMENT_REQUEST = 'LOAD_COMMENT_REQUEST';
-export const LOAD_COMMENT_SUCCESS = 'LOAD_COMMENT_SUCCESS';
-export const LOAD_COMMENT_FAILURE = 'LOAD_COMMENT_FAILURE';
+export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENT_REQUEST';
+export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENT_SUCCESS';
+export const LOAD_COMMENTS_FAILURE = 'LOAD_COMMENT_FAILURE';
 //리트윗 하는 액션
 export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
@@ -130,6 +130,17 @@ const reducer = ( state = initialState, action) => {
                 isAddingComment: false,
                 addCommentErrorReason: action.error,
             }
+        }
+        case LOAD_COMMENTS_SUCCESS: {
+            const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
+            const post = state.mainPosts[postIndex];
+            const Comments = action.data.comments;
+            const mainPosts = [...state.mainPosts];
+            mainPosts[postIndex] = { ...post, Comments };
+            return {
+              ...state,
+              mainPosts,
+            };
         }
         case LOAD_MAIN_POSTS_REQUEST: 
         case LOAD_HASHTAG_POSTS_REQUEST: 

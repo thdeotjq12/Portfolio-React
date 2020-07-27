@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -143,6 +143,14 @@ const PostCard = ({
   const onToggleComment = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(() => {
     // 댓글창이 펼쳐져 있으면 닫고 펼치는 동작
     setCommentFormOpened(prev => !prev);
+
+    if (!commentFormOpened) {
+      // 댓글창이 닫혀있는 경우
+      dispath({
+        type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["LOAD_COMMENTS_REQUEST"],
+        data: post.id
+      });
+    }
   }, []);
   const onSubmitComment = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
     e.preventDefault();
@@ -4769,7 +4777,7 @@ const Home = () => {
 /*!**************************!*\
   !*** ./reducers/post.js ***!
   \**************************/
-/*! exports provided: initialState, LOAD_MAIN_POSTS_REQUEST, LOAD_MAIN_POSTS_SUCCESS, LOAD_MAIN_POSTS_FAILURE, LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE, LOAD_USER_POSTS_REQUEST, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, REMOVE_IMAGE, ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, LOAD_COMMENT_REQUEST, LOAD_COMMENT_SUCCESS, LOAD_COMMENT_FAILURE, RETWEET_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE, default */
+/*! exports provided: initialState, LOAD_MAIN_POSTS_REQUEST, LOAD_MAIN_POSTS_SUCCESS, LOAD_MAIN_POSTS_FAILURE, LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE, LOAD_USER_POSTS_REQUEST, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, REMOVE_IMAGE, ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, LOAD_COMMENTS_REQUEST, LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_FAILURE, RETWEET_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4800,9 +4808,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_COMMENT_REQUEST", function() { return ADD_COMMENT_REQUEST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_COMMENT_SUCCESS", function() { return ADD_COMMENT_SUCCESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_COMMENT_FAILURE", function() { return ADD_COMMENT_FAILURE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENT_REQUEST", function() { return LOAD_COMMENT_REQUEST; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENT_SUCCESS", function() { return LOAD_COMMENT_SUCCESS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENT_FAILURE", function() { return LOAD_COMMENT_FAILURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENTS_REQUEST", function() { return LOAD_COMMENTS_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENTS_SUCCESS", function() { return LOAD_COMMENTS_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_COMMENTS_FAILURE", function() { return LOAD_COMMENTS_FAILURE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RETWEET_REQUEST", function() { return RETWEET_REQUEST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RETWEET_SUCCESS", function() { return RETWEET_SUCCESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RETWEET_FAILURE", function() { return RETWEET_FAILURE; });
@@ -4865,9 +4873,9 @@ const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE'; //게시글 댓글 불러오기
 
-const LOAD_COMMENT_REQUEST = 'LOAD_COMMENT_REQUEST';
-const LOAD_COMMENT_SUCCESS = 'LOAD_COMMENT_SUCCESS';
-const LOAD_COMMENT_FAILURE = 'LOAD_COMMENT_FAILURE'; //리트윗 하는 액션
+const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENT_REQUEST';
+const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENT_SUCCESS';
+const LOAD_COMMENTS_FAILURE = 'LOAD_COMMENT_FAILURE'; //리트윗 하는 액션
 
 const RETWEET_REQUEST = 'RETWEET_REQUEST';
 const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
@@ -4956,6 +4964,20 @@ const reducer = (state = initialState, action) => {
         });
       }
 
+    case LOAD_COMMENTS_SUCCESS:
+      {
+        const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
+        const post = state.mainPosts[postIndex];
+        const Comments = action.data.comments;
+        const mainPosts = [...state.mainPosts];
+        mainPosts[postIndex] = _objectSpread({}, post, {
+          Comments
+        });
+        return _objectSpread({}, state, {
+          mainPosts
+        });
+      }
+
     case LOAD_MAIN_POSTS_REQUEST:
     case LOAD_HASHTAG_POSTS_REQUEST:
     case LOAD_USER_POSTS_REQUEST:
@@ -4992,7 +5014,7 @@ const reducer = (state = initialState, action) => {
 
 /***/ }),
 
-/***/ 4:
+/***/ 3:
 /*!******************************!*\
   !*** multi ./pages/index.js ***!
   \******************************/
