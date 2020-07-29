@@ -3,12 +3,11 @@ const db = require('../models');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const router = express.Router();
+const {isLoggedIn} = require('./middleware');
 
-router.get('/', (req, res) => { // /api/user
+router.get('/', isLoggedIn , (req, res) => { // /api/user
     // 참고로 401은 비밀번호나 아이디가 틀렸을 확률이 높고, 500은 서버쪽에서 코딩이 잘못되었을 확률이 높습니다.
-    if(!req.user){
-        return res.status(401).send('로그인이 필요합니다.');
-    }
+
     // 패스워드 정보는 볼수 있기 때문에 삭제
     const user = Object.assign( {}, req.user.toJSON());
     delete user.password;

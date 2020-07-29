@@ -8,6 +8,13 @@ router.get('/', async (req,res,next)=>{ // GET /api/posts
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],
+            },{
+                model: db.Image,
+            },{
+                model: db.User,
+                through: 'Like',
+                as: 'Likers',
+                attributes: ['id'],
             }],
             order:[['createdAt', 'DESC']], // 최신글을 맨 앞으로
         });

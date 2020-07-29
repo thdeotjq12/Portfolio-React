@@ -21,6 +21,8 @@ app.use(express.json()); // json 형식의 데이터 처리
 app.use(express.urlencoded( { extended: true })); // 폼으로 넘어온 데이터 처리 
 // 서버쪽 로그남김
 app.use(morgan('dev'));
+// 이미지 업로드(미리보기)관련 - 경로안에 있는 파일을 다른 서버에서 자유롭게 가져갈 수 있음
+app.use('/', express.static('uploads')); // '/': uploads 폴더를 루트폴더로 지정(프론트에서 접근하는 주소)
 // 서버에러관련
 app.use(cors( {
     origin : true, // 혹은 front 주소

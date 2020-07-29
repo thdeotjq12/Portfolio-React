@@ -77,6 +77,29 @@ const addDummy = {
 
 const reducer = ( state = initialState, action) => {
     switch (action.type){
+        case UPLOAD_IMAGES_REQUEST: {
+            return {
+                ...state,
+            }
+        }
+        case UPLOAD_IMAGES_SUCCESS: {
+            return {
+                ...state,
+                imagePaths:[...state.imagePaths, ...action.data], // 이미지 미리보기 할 수 있는 경로들
+            }
+        }
+        case UPLOAD_IMAGES_FAILURE: {
+            return {
+                ...state,
+            }
+        }
+        // 이미지 제거는 동기적으로 처리해도 되서 3분류안함
+        case REMOVE_IMAGE:{
+            return{
+                ...state,
+                imagePaths: state.imagePaths.filter((v,i) => i !== action.index),
+            }
+        }
         // 게시글 작성
         case ADD_POST_REQUEST: {
             return {
@@ -92,6 +115,7 @@ const reducer = ( state = initialState, action) => {
                 isAddingPost: false,
                 mainPosts: [action.data, ...state.mainPosts],
                 postAdded: true,
+                imagePaths: [],
             }
         }
         case ADD_POST_FAILURE: {
@@ -112,17 +136,17 @@ const reducer = ( state = initialState, action) => {
         }
         case ADD_COMMENT_SUCCESS: {
             // 어떤게시글에 댓글을 추가할지
-            const postIndex = state.mainPosts.findIndex( v=> v.id === action.data.postId);
+            const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
             const post = state.mainPosts[postIndex];
             const Comments = [...post.Comments, action.data.comment];
             const mainPosts = [...state.mainPosts];
-            mainPosts[postIndex] = {...post, Comments};
+            mainPosts[postIndex] = { ...post, Comments };
             return {
-                ...state,
-                isAddingComment: false,
-                mainPosts,
-                commentAdded: true,
-            }
+              ...state,
+              isAddingComment: false,
+              mainPosts,
+              commentAdded: true,
+            };
         }
         case ADD_COMMENT_FAILURE: {
             return {
@@ -165,7 +189,49 @@ const reducer = ( state = initialState, action) => {
                 ...state,
             }
         }
-
+        case LIKE_POST_REQUEST: {
+            return {
+                ...state,
+            }
+        }
+        case LIKE_POST_SUCCESS: {
+            // 불변성때문에, 바뀔 객체만 새로 만들어줘야함
+            const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId) ;
+            const post = state.mainPosts[postIndex];
+            const Likers = [{ id : action.data.UserId }, ...post.Likers];
+            const mainPosts = [...state.mainPosts];
+            mainPosts[postIndex] = {...post, Likers}; //불변성 유지 후 다시 구성하는 부분
+            return {
+                ...state,
+                mainPosts,
+            }
+        }
+        case LIKE_POST_FAILURE: {
+            return {
+                ...state,
+            }
+        }
+        case UNLIKE_POST_REQUEST: {
+            return {
+                ...state,
+            }
+        }
+        case UNLIKE_POST_SUCCESS: {
+            const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId) ;
+            const post = state.mainPosts[postIndex];
+            const Likers =post.Likers.filter(v=> v.id !== action.data.UserId); // 좋아요 목록중 내 아이디 제거 
+            const mainPosts = [...state.mainPosts];
+            mainPosts[postIndex] = {...post, Likers};
+            return {
+                ...state,
+                mainPosts,
+            }
+        }
+        case UNLIKE_POST_FAILURE: {
+            return {
+                ...state,
+            }
+        }
         default:{
             return{
                 ...state,

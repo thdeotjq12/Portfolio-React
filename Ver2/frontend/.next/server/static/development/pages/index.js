@@ -93,6 +93,132 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ "./components/ImagesZoom.js":
+/*!**********************************!*\
+  !*** ./components/ImagesZoom.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "prop-types");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd */ "antd");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(antd__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_slick__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-slick */ "react-slick");
+/* harmony import */ var react_slick__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_slick__WEBPACK_IMPORTED_MODULE_3__);
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+
+
+const ImagesZoom = ({
+  images,
+  onClose
+}) => {
+  const {
+    0: currentSlide,
+    1: setCurrentSlide
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0); // 몇번째 이미지를 보고있는지
+
+  return __jsx("div", {
+    style: {
+      position: 'fixed',
+      zIndex: 5000,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    }
+  }, __jsx("header", {
+    style: {
+      height: 44,
+      background: 'white',
+      position: 'relative',
+      padding: 0,
+      textAlign: 'center'
+    }
+  }, __jsx("h1", {
+    style: {
+      margin: 0,
+      fontSize: '17px',
+      color: '#333',
+      lineHeight: '44px'
+    }
+  }, "\uC0C1\uC138 \uC774\uBBF8\uC9C0"), __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Icon"], {
+    type: "close",
+    onClick: onClose,
+    style: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      padding: 15,
+      lineHeight: '14px',
+      cursor: 'pointer'
+    }
+  })), __jsx("div", {
+    style: {
+      height: 'calc(100% - 44px)',
+      background: '#090909'
+    }
+  }, __jsx("div", null, __jsx(react_slick__WEBPACK_IMPORTED_MODULE_3___default.a, {
+    initialSlide: 0 // 처음 보여줄 이미지 
+    ,
+    afterChange: slide => setCurrentSlide(slide) // 슬라이드 할때마다 index 변경
+    ,
+    infinite: false // 무한 슬라이드 1~4 > 4~1
+    ,
+    arrows: true,
+    slidesToShow: 1 // 한번에 1장만 보여줌
+    ,
+    slidesToScroll: 1 // 한번에 1장만 슬라이드
+
+  }, images.map(v => {
+    return __jsx("div", {
+      style: {
+        padding: 32,
+        textAlign: 'center'
+      }
+    }, __jsx("img", {
+      src: `http://localhost:3065/${v.src}`,
+      style: {
+        margin: '0 auto',
+        maxHeight: 750
+      }
+    }));
+  })), __jsx("div", {
+    style: {
+      textAlign: 'center'
+    }
+  }, __jsx("div", {
+    style: {
+      width: 75,
+      height: 30,
+      lineHeight: '30px',
+      borderRadius: 15,
+      background: '#313131',
+      display: 'inline-block',
+      textAlign: 'center',
+      color: 'white',
+      fontSize: '15px'
+    }
+  }, currentSlide + 1, " / ", images.length)))));
+};
+
+ImagesZoom.propTypes = {
+  images: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
+    src: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
+  })).isRequired,
+  onClose: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func.isRequired
+};
+/* harmony default export */ __webpack_exports__["default"] = (ImagesZoom);
+
+/***/ }),
+
 /***/ "./components/PostCard.js":
 /*!********************************!*\
   !*** ./components/PostCard.js ***!
@@ -111,9 +237,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "react-redux");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _reducers_post__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../reducers/post */ "./reducers/post.js");
-/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
-/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _PostImages__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./PostImages */ "./components/PostImages.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_6__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
 
 
 
@@ -140,6 +268,7 @@ const PostCard = ({
     isAddingComment
   } = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(state => state.post);
   const dispath = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useDispatch"])();
+  const liked = me && post.Likers && post.Likers.find(v => v.id === me.id);
   const onToggleComment = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(() => {
     // 댓글창이 펼쳐져 있으면 닫고 펼치는 동작
     setCommentFormOpened(prev => !prev);
@@ -174,18 +303,39 @@ const PostCard = ({
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     setCommentText('');
   }, [commentAdded === true]);
+  const onToggleLike = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(() => {
+    if (!me) {
+      return alert('로그인이 필요합니다!');
+    }
+
+    if (liked) {
+      // Likers : 좋아요 누른 사람들 배열로 들어있음
+      dispath({
+        type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["UNLIKE_POST_REQUEST"],
+        data: post.id
+      });
+    } else {
+      // 좋아요 안 누른 상태
+      dispath({
+        type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["LIKE_POST_REQUEST"],
+        data: post.id
+      });
+    }
+  }, [me && me.id, post && post.id, liked]);
   return __jsx("div", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
     key: +post.createdAt,
-    cover: post.img && __jsx("img", {
-      alt: "example",
-      src: post.img
+    cover: post.Images[0] && __jsx(_PostImages__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      images: post.Images
     }),
     actions: [__jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
       type: "retweet",
       key: "retweet"
     }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
       type: "heart",
-      key: "heart"
+      key: "heart",
+      theme: liked ? 'twoTone' : 'outlined',
+      twoToneColor: "#eb2f96",
+      onClick: onToggleLike
     }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
       type: "message",
       key: "message",
@@ -196,7 +346,7 @@ const PostCard = ({
     })],
     extra: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], null, "\uD314\uB85C\uC6B0")
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"].Meta, {
-    avatar: __jsx(next_link__WEBPACK_IMPORTED_MODULE_5___default.a, {
+    avatar: __jsx(next_link__WEBPACK_IMPORTED_MODULE_6___default.a, {
       href: {
         pathname: '/user',
         query: {
@@ -209,7 +359,7 @@ const PostCard = ({
     title: post.User.nickname,
     description: __jsx("div", null, post.content.split(/(#[^\s]+)/g).map(v => {
       if (v.match(/#[^\s]+/)) {
-        return __jsx(next_link__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        return __jsx(next_link__WEBPACK_IMPORTED_MODULE_6___default.a, {
           href: {
             pathname: '/hashtag',
             query: {
@@ -240,7 +390,7 @@ const PostCard = ({
     dataSource: post.Comments || [],
     renderItem: item => __jsx("li", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Comment"], {
       author: item.User.nickname,
-      avatar: __jsx(next_link__WEBPACK_IMPORTED_MODULE_5___default.a, {
+      avatar: __jsx(next_link__WEBPACK_IMPORTED_MODULE_6___default.a, {
         href: {
           pathname: '/user',
           query: {
@@ -299,6 +449,7 @@ const PostForm = () => {
     isAddingPost,
     postAdded
   } = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useSelector"])(state => state.post);
+  const imageInput = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
   const onsubmitForm = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
     e.preventDefault(); // 이걸 안하면 새 페이지로 넘어감(싱글폼 들은 꼭 작성)
 
@@ -306,13 +457,17 @@ const PostForm = () => {
       return alert('게시글을 작성해주세요!');
     }
 
+    const formData = new FormData(); // 게시글 최종적으로 올리는 용도, 필요는 없지만 라우터에서 upload.none 을 보여주기 위함(폼데이터 컨트롤)
+
+    imagePaths.forEach(i => {
+      formData.append('image', i); // req.body.image
+    });
+    formData.append('content', text);
     dispatch({
       type: _reducers_post__WEBPACK_IMPORTED_MODULE_3__["ADD_POST_REQUEST"],
-      data: {
-        content: text.trim()
-      }
+      data: formData
     });
-  }, [text]);
+  }, [text, imagePaths]);
   const onChangeText = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
     setText(e.target.value);
   }, []); // 게시글 작성될때 작성폼 초기화
@@ -320,6 +475,31 @@ const PostForm = () => {
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     setText('');
   }, [postAdded === true]);
+  const onChangeImages = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(e => {
+    console.log(e.target.files); // multipart/form-data 이미지나 파일, 동영상등을 서버로 보낼때 사용 
+    // multipart/form-data는 submit 시 서버로 데이터 전송 >>> 바로 보내지 않고 ajax로 보냄(spa 유지 위함) new FormData 이것도 ajax의 객체
+
+    const imageFormData = new FormData(); // 폼에서 타입을 encType="multipart/form-data" 했을때 브라우저에서 FormData 객채를 제공.
+
+    [].forEach.call(e.target.files, f => {
+      // 그 FormData 객체안에 이미지파일을 각각 넣어줘야함
+      imageFormData.append('image', f); // 게시글 같이 보내지 않고 이미지만 미리 보냄(같이 보내면 효율이 좋지 않음)
+    });
+    dispatch({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_3__["UPLOAD_IMAGES_REQUEST"],
+      data: imageFormData
+    });
+  }, []);
+  const onClickImageUpload = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(() => {
+    imageInput.current.click(); // 이미지업로드 버튼을 눌렀을때 그위의 input 을 누름 효과
+  }, [imageInput.current]);
+  const onRemoveImage = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(index => () => {
+    // 괄호가 있는 함수는 한번더 괄호를 붙여줘야함(고차함수)
+    dispatch({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_3__["REMOVE_IMAGE"],
+      index
+    });
+  });
   return __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Form"], {
     style: {
       margin: '10px 0 20 px'
@@ -331,30 +511,131 @@ const PostForm = () => {
     placeholder: "\uC5B4\uB5A4 \uC2E0\uAE30\uD55C \uC77C\uC774 \uC788\uC5C8\uB098\uC694?",
     value: text,
     onChange: onChangeText
-  }), __jsx("div", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], null, "\uC774\uBBF8\uC9C0 \uC5C5\uB85C\uB4DC"), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+  }), __jsx("div", null, __jsx("input", {
+    type: "file",
+    multiple: true,
+    hidden: true,
+    ref: imageInput,
+    onChange: onChangeImages
+  }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    onClick: onClickImageUpload
+  }, "\uC774\uBBF8\uC9C0 \uC5C5\uB85C\uB4DC"), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     type: "primary",
     style: {
       float: "right"
     },
     htmlType: "submit",
     loading: isAddingPost
-  }, "\uC9F9\uC9F9")), __jsx("div", null, imagePaths.map(v => {
+  }, "\uC9F9\uC9F9")), __jsx("div", null, imagePaths.map((v, i) => {
     return __jsx("div", {
       key: v,
       style: {
         display: "inline-block"
       }
     }, __jsx("img", {
-      src: "http://localhost:3065/",
+      src: `http://localhost:3065/${v}`,
       style: {
         width: "200px"
       },
       alt: v
-    }), __jsx("div", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], null, "\uC81C\uAC70")));
+    }), __jsx("div", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+      onClick: onRemoveImage(i)
+    }, "\uC81C\uAC70")));
   })));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (PostForm);
+
+/***/ }),
+
+/***/ "./components/PostImages.js":
+/*!**********************************!*\
+  !*** ./components/PostImages.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "prop-types");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd */ "antd");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(antd__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _ImagesZoom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ImagesZoom */ "./components/ImagesZoom.js");
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+
+
+const PostImages = ({
+  images
+}) => {
+  const {
+    0: showImagesZoom,
+    1: setShowImagesZoom
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const onZoom = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(() => {
+    setShowImagesZoom(true);
+  }, []);
+  const onClose = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(() => {
+    setShowImagesZoom(false);
+  }, []);
+
+  if (images.length === 1) {
+    return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx("img", {
+      src: `http://localhost:3065/${images[0].src}`,
+      onClick: onZoom
+    }), showImagesZoom && __jsx(_ImagesZoom__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      images: images,
+      onClose: onClose
+    }));
+  }
+
+  if (images.length === 2) {
+    return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx("div", null, __jsx("img", {
+      src: `http://localhost:3065/${images[0].src}`,
+      width: "50%",
+      onClick: onZoom
+    }), __jsx("img", {
+      src: `http://localhost:3065/${images[1].src}`,
+      width: "50%",
+      onClick: onZoom
+    })), showImagesZoom && __jsx(_ImagesZoom__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      images: images,
+      onClose: onClose
+    }));
+  }
+
+  return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx("div", null, __jsx("img", {
+    src: `http://localhost:3065/${images[0].src}`,
+    width: "50%",
+    onClick: onZoom
+  }), __jsx("div", {
+    style: {
+      display: 'inline-block',
+      width: '50%',
+      textAlign: 'center',
+      verticalAlign: 'middle'
+    },
+    onClick: onZoom
+  }, __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Icon"], {
+    type: "plus"
+  }), __jsx("br", null), images.length - 1, "\uAC1C\uC758 \uC0AC\uC9C4 \uB354\uBCF4\uAE30")), showImagesZoom && __jsx(_ImagesZoom__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    images: images,
+    onClose: onClose
+  }));
+};
+
+PostImages.propTypes = {
+  images: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.shape({
+    // shape: Object 를 좀 더  구체화해서 적어주는것
+    src: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
+  })).isRequired
+};
+/* harmony default export */ __webpack_exports__["default"] = (PostImages);
 
 /***/ }),
 
@@ -4902,7 +5183,33 @@ const addDummy = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case UPLOAD_IMAGES_REQUEST:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case UPLOAD_IMAGES_SUCCESS:
+      {
+        return _objectSpread({}, state, {
+          imagePaths: [...state.imagePaths, ...action.data] // 이미지 미리보기 할 수 있는 경로들
+
+        });
+      }
+
+    case UPLOAD_IMAGES_FAILURE:
+      {
+        return _objectSpread({}, state);
+      }
+    // 이미지 제거는 동기적으로 처리해도 되서 3분류안함
+
+    case REMOVE_IMAGE:
+      {
+        return _objectSpread({}, state, {
+          imagePaths: state.imagePaths.filter((v, i) => i !== action.index)
+        });
+      }
     // 게시글 작성
+
     case ADD_POST_REQUEST:
       {
         return _objectSpread({}, state, {
@@ -4917,7 +5224,8 @@ const reducer = (state = initialState, action) => {
         return _objectSpread({}, state, {
           isAddingPost: false,
           mainPosts: [action.data, ...state.mainPosts],
-          postAdded: true
+          postAdded: true,
+          imagePaths: []
         });
       }
 
@@ -5003,6 +5311,59 @@ const reducer = (state = initialState, action) => {
         return _objectSpread({}, state);
       }
 
+    case LIKE_POST_REQUEST:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case LIKE_POST_SUCCESS:
+      {
+        // 불변성때문에, 바뀔 객체만 새로 만들어줘야함
+        const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
+        const post = state.mainPosts[postIndex];
+        const Likers = [{
+          id: action.data.UserId
+        }, ...post.Likers];
+        const mainPosts = [...state.mainPosts];
+        mainPosts[postIndex] = _objectSpread({}, post, {
+          Likers
+        }); //불변성 유지 후 다시 구성하는 부분
+
+        return _objectSpread({}, state, {
+          mainPosts
+        });
+      }
+
+    case LIKE_POST_FAILURE:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case UNLIKE_POST_REQUEST:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case UNLIKE_POST_SUCCESS:
+      {
+        const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
+        const post = state.mainPosts[postIndex];
+        const Likers = post.Likers.filter(v => v.id !== action.data.UserId); // 좋아요 목록중 내 아이디 제거 
+
+        const mainPosts = [...state.mainPosts];
+        mainPosts[postIndex] = _objectSpread({}, post, {
+          Likers
+        });
+        return _objectSpread({}, state, {
+          mainPosts
+        });
+      }
+
+    case UNLIKE_POST_FAILURE:
+      {
+        return _objectSpread({}, state);
+      }
+
     default:
       {
         return _objectSpread({}, state);
@@ -5078,6 +5439,17 @@ module.exports = require("react");
 /***/ (function(module, exports) {
 
 module.exports = require("react-redux");
+
+/***/ }),
+
+/***/ "react-slick":
+/*!******************************!*\
+  !*** external "react-slick" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-slick");
 
 /***/ }),
 

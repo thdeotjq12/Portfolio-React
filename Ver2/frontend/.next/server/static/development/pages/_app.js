@@ -4734,6 +4734,15 @@ const Portfolio = ({
       href: "https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.11/antd.css"
     }), __jsx("script", {
       src: "https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.11/antd.js"
+    }), __jsx("link", {
+      rel: "stylesheet",
+      type: "text/css",
+      charSet: "UTF-8",
+      href: "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+    }), __jsx("link", {
+      rel: "stylesheet",
+      type: "text/css",
+      href: "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
     })), __jsx(_components_AppLayout__WEBPACK_IMPORTED_MODULE_2__["default"], null, __jsx(Component, pageProps)))
   );
 };
@@ -5120,7 +5129,33 @@ const addDummy = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case UPLOAD_IMAGES_REQUEST:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case UPLOAD_IMAGES_SUCCESS:
+      {
+        return _objectSpread({}, state, {
+          imagePaths: [...state.imagePaths, ...action.data] // 이미지 미리보기 할 수 있는 경로들
+
+        });
+      }
+
+    case UPLOAD_IMAGES_FAILURE:
+      {
+        return _objectSpread({}, state);
+      }
+    // 이미지 제거는 동기적으로 처리해도 되서 3분류안함
+
+    case REMOVE_IMAGE:
+      {
+        return _objectSpread({}, state, {
+          imagePaths: state.imagePaths.filter((v, i) => i !== action.index)
+        });
+      }
     // 게시글 작성
+
     case ADD_POST_REQUEST:
       {
         return _objectSpread({}, state, {
@@ -5135,7 +5170,8 @@ const reducer = (state = initialState, action) => {
         return _objectSpread({}, state, {
           isAddingPost: false,
           mainPosts: [action.data, ...state.mainPosts],
-          postAdded: true
+          postAdded: true,
+          imagePaths: []
         });
       }
 
@@ -5217,6 +5253,59 @@ const reducer = (state = initialState, action) => {
     case LOAD_MAIN_POSTS_FAILURE:
     case LOAD_HASHTAG_POSTS_FAILURE:
     case LOAD_USER_POSTS_FAILURE:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case LIKE_POST_REQUEST:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case LIKE_POST_SUCCESS:
+      {
+        // 불변성때문에, 바뀔 객체만 새로 만들어줘야함
+        const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
+        const post = state.mainPosts[postIndex];
+        const Likers = [{
+          id: action.data.UserId
+        }, ...post.Likers];
+        const mainPosts = [...state.mainPosts];
+        mainPosts[postIndex] = _objectSpread({}, post, {
+          Likers
+        }); //불변성 유지 후 다시 구성하는 부분
+
+        return _objectSpread({}, state, {
+          mainPosts
+        });
+      }
+
+    case LIKE_POST_FAILURE:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case UNLIKE_POST_REQUEST:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case UNLIKE_POST_SUCCESS:
+      {
+        const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
+        const post = state.mainPosts[postIndex];
+        const Likers = post.Likers.filter(v => v.id !== action.data.UserId); // 좋아요 목록중 내 아이디 제거 
+
+        const mainPosts = [...state.mainPosts];
+        mainPosts[postIndex] = _objectSpread({}, post, {
+          Likers
+        });
+        return _objectSpread({}, state, {
+          mainPosts
+        });
+      }
+
+    case UNLIKE_POST_FAILURE:
       {
         return _objectSpread({}, state);
       }
@@ -5647,8 +5736,93 @@ function* watchLoadComments() {
 } //
 
 
+function uploadImagesAPI(formData) {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(`/post/images`, formData, {
+    withCredentials: true
+  });
+}
+
+function* uploadImages(action) {
+  try {
+    const result = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(uploadImagesAPI, action.data);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["UPLOAD_IMAGES_SUCCESS"],
+      data: result.data // 서버쪽 저장된 이미지 주소 받음(그 주소로 이미지 미리보기등 가능)
+
+    });
+  } catch (e) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["UPLOAD_IMAGES_FAILURE"],
+      error: e
+    });
+  }
+}
+
+function* watchUploadImages() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["UPLOAD_IMAGES_REQUEST"], uploadImages);
+} //
+
+
+function likePostAPI(postId) {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(`/post/${postId}/like`, {}, {
+    withCredentials: true
+  });
+}
+
+function* likePost(action) {
+  try {
+    const result = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(likePostAPI, action.data);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["LIKE_POST_SUCCESS"],
+      data: {
+        postId: action.data,
+        userId: result.data.userId
+      }
+    });
+  } catch (e) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["LIKE_POST_FAILURE"],
+      error: e
+    });
+  }
+}
+
+function* watchLikePost() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["LIKE_POST_REQUEST"], likePost);
+} //
+
+
+function unlikePostAPI(postId) {
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.delete(`/post/${postId}/like`, {
+    withCredentials: true
+  });
+}
+
+function* unlikePost(action) {
+  try {
+    const result = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(unlikePostAPI, action.data);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["UNLIKE_POST_SUCCESS"],
+      data: {
+        postId: action.data,
+        userId: result.data.userId
+      }
+    });
+  } catch (e) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_1__["UNLIKE_POST_FAILURE"],
+      error: e
+    });
+  }
+}
+
+function* watchUnlikePost() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_reducers_post__WEBPACK_IMPORTED_MODULE_1__["UNLIKE_POST_REQUEST"], unlikePost);
+} //
+
+
 function* postSaga() {
-  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddPost), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddComment), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchloadMainPosts), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLoadHashtagPosts), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLoadUserPosts), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLoadComments)]);
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddPost), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchAddComment), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchloadMainPosts), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLoadHashtagPosts), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLoadUserPosts), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLoadComments), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchUploadImages), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchLikePost), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["fork"])(watchUnlikePost)]);
 }
 ;
 
