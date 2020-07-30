@@ -19,7 +19,7 @@ const PostCardContent = ({ postData }) => {
         }
         return v;
       })}
-    </div>
+    </div> // 게시물의 해쉬태그에 링크 걸어줘야함 (a tag로 하면 리액트 오류남, next의 Link tag 사용)
   );
 };
 

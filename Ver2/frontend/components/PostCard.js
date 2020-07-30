@@ -2,8 +2,9 @@ import React, {useState, useCallback, useEffect} from 'react';
 import { Card , Icon, Button, Avatar, Input, List, Form, Comment} from 'antd';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
-import { ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST, UNLIKE_POST_REQUEST, LIKE_POST_REQUEST } from '../reducers/post';
+import { ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST, UNLIKE_POST_REQUEST, LIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
 import PostImages from './PostImages';
+import PostCardContent from './PostCardContent';
 import Link from 'next/link';
 const PostCard = ( { post}) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -58,46 +59,56 @@ const PostCard = ( { post}) => {
       })
     }
   }, [me && me.id, post && post.id, liked])
+  const onRetweet = useCallback( ()=> {
+    if(!me){
+      return alert('로그인이 필요합니다.');
+    }
+    return dispath({
+      type: RETWEET_REQUEST,
+      data: post.id,
+    })
+  }, [me && me.id , post && post.id]);
   return (
     <div>
     <Card
     key={+post.createdAt}
     cover={post.Images[0] && <PostImages images={post.Images}></PostImages>}
     actions={[
-      <Icon type="retweet" key="retweet"></Icon>,
+      <Icon type="retweet" key="retweet" onClick={onRetweet}></Icon>,
       <Icon type="heart" key="heart" theme={liked ? 'twoTone' : 'outlined'} twoToneColor="#eb2f96" onClick={onToggleLike}></Icon>,
       <Icon type="message" key="message" onClick={onToggleComment}></Icon>,
       <Icon type="ellipsis" key="ellipsis"></Icon>
     ]}
+    title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
     extra={<Button>팔로우</Button>}
   >
-    <Card.Meta
-      avatar={<Link href={{ 
-        pathname: '/user', 
-        query: { id: post.User.id } }} as={`/user/${post.User.id}`}> 
-        <a><Avatar>{post.User.nickname[0]}</Avatar></a> 
-        </Link>
-      } // <a> 태그를 윗줄로 올리면 무한 GET 에러남 , 이유 모름....
-      title={post.User.nickname}
-      description={(
-      <div>
-        {post.content.split(/(#[^\s]+)/g).map((v)=>{
-          if(v.match(/#[^\s]+/)){
-            return (
-              <Link
-              href={{ pathname: '/hashtag', query: { tag: v.slice(1) }}} as={`/hashtag/${v.slice}`}
-              key={v}
-            >
-              <a>{v}</a>
+    {post.RetweetId && post.Retweet ? (
+     <Card
+        cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}></PostImages>}
+     >
+        <Card.Meta
+          avatar={
+            <Link href={{ pathname: '/user', query: { id: post.Retweet.User.id } }} as={`/user/${post.Retweet.User.id}`}> 
+              <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a> 
             </Link>
-            );
-          }
-          return v;
-      })}
-      </div>
-      )} // 게시물의 해쉬태그에 링크 걸어줘야함 (a tag로 하면 리액트 오류남, next의 Link tag 사용)
-    ></Card.Meta>
-  </Card>
+          } // <a> 태그를 윗줄로 올리면 무한 GET 에러남 , 이유 모름....
+          title={post.Retweet.User.nickname}
+          description={<PostCardContent postData={post.Retweet.content}></PostCardContent>} 
+        ></Card.Meta>
+      </Card> )
+      :(
+        <Card.Meta
+            avatar={<Link href={{ 
+            pathname: '/user', 
+            query: { id: post.User.id } }} as={`/user/${post.User.id}`}> 
+              <a><Avatar>{post.User.nickname[0]}</Avatar></a> 
+            </Link>
+          } // <a> 태그를 윗줄로 올리면 무한 GET 에러남 , 이유 모름....
+          title={post.User.nickname}
+          description={<PostCardContent postData={post.content}></PostCardContent>} 
+        ></Card.Meta>
+      )}
+    </Card>
   {commentFormOpened && (
         <>
           <Form onSubmit={onSubmitComment}>

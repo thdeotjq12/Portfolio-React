@@ -198,7 +198,7 @@ const reducer = ( state = initialState, action) => {
             // 불변성때문에, 바뀔 객체만 새로 만들어줘야함
             const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId) ;
             const post = state.mainPosts[postIndex];
-            const Likers = [{ id : action.data.UserId }, ...post.Likers];
+            const Likers = [{ id : action.data.userId }, ...post.Likers];
             const mainPosts = [...state.mainPosts];
             mainPosts[postIndex] = {...post, Likers}; //불변성 유지 후 다시 구성하는 부분
             return {
@@ -219,7 +219,7 @@ const reducer = ( state = initialState, action) => {
         case UNLIKE_POST_SUCCESS: {
             const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId) ;
             const post = state.mainPosts[postIndex];
-            const Likers =post.Likers.filter(v=> v.id !== action.data.UserId); // 좋아요 목록중 내 아이디 제거 
+            const Likers = post.Likers.filter(v=> v.id !== action.data.userId); // 좋아요 목록중 내 아이디 제거 
             const mainPosts = [...state.mainPosts];
             mainPosts[postIndex] = {...post, Likers};
             return {
@@ -228,6 +228,22 @@ const reducer = ( state = initialState, action) => {
             }
         }
         case UNLIKE_POST_FAILURE: {
+            return {
+                ...state,
+            }
+        }
+        case RETWEET_REQUEST: {
+            return {
+                ...state,
+            }
+        }
+        case RETWEET_SUCCESS: {
+            return {
+                ...state,
+                mainPosts: [action.data, ...state.mainPosts], // 기존 게시글 앞에 받아온 게시글을 받아오기
+            }
+        }
+        case RETWEET_FAILURE: {
             return {
                 ...state,
             }

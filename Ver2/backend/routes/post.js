@@ -150,5 +150,58 @@ router.delete('/:id/like', isLoggedIn, async(req, res, next)=>{
     }
 })
 
+router.post('/:id/retweet', isLoggedIn, async (req, res, next)=>{
+    try{
+        const post = await db.Post.findOne({ 
+            where: { id: req.params.id },
+            include: [{
+                model: db.Post,
+                as: 'Retweet',
+            }],
+        });
+        if(!post){ //게시글이 있는지 항상 확인. 게시글이 없는데 실수 혹은 해커가 요청보낼 수 있음
+            return res.status(404).send('포스트가 존재하지 않습니다.');
+        }
+        if(req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)){
+            return res.status(403).send('자신의 글은 리트윗할 수 없습니다.');
+        }
+        const retweetTargetId = post.RetweetId || post.id;
+        const exPost = await db.Post.findOne({
+            where:{
+                UserId: req.user.id,
+                RetweetId: retweetTargetId,
+            },
+        });
+        if(exPost){
+            return res.status(403).send('이미 리트윗했습니다.');
+        }
+        const retweet = await db.Post.create({
+            UserId: req.user.id,
+            RetweetId: retweetTargetId,
+            content: 'retweet', // 모델에서 allowNull : false 이기때문에 뭐라도 넣어줘야함
+        })
+        // 리트윗글은 항상 이전 게시글을 가지고 있어야함, 내 게시글 + 남의 게시글 까지 같이 가져오기
+        const retweetWithPrevPost = await db.Post.findOne({
+            where: { id: retweet.id }, // 리트윗한 본인 게시글
+            include: [{
+                model: db.User, // 작성자 정보
+                attributes: ['id', 'nickname'],
+            }, {
+                model: db.Post, // 리트윗 게시글 내용 불러오기
+                as: 'Retweet',
+                include: [{ // 리트윗한 게시글의 작성자 정보, 이미지 등
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: db.Image,
+                }],
+            }],
+        });
+        res.json(retweetWithPrevPost);
+    }catch(e){
+
+    }
+})
+
 
 module.exports = router;
