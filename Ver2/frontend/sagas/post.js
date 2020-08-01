@@ -6,6 +6,7 @@ import { ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
         LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE, LOAD_USER_POSTS_REQUEST,
         LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_FAILURE, LOAD_COMMENTS_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, UPLOAD_IMAGES_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, LIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE, UNLIKE_POST_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE, RETWEET_REQUEST} from '../reducers/post';
 import axios from 'axios';
+import { ADD_POST_TO_ME } from '../reducers/user';
 
 
 function addPostAPI(postData){
@@ -13,13 +14,16 @@ function addPostAPI(postData){
         withCredentials: true, //로그인한 사람만 글을 쓸 수 있어서 쿠키를 같이 보내줌(로그인 인증을 했는지 여부 검토)
     });
 }
-
 function* addPost(action){
     try{
         const result = yield call(addPostAPI, action.data);
         yield put({
-            type:ADD_POST_SUCCESS,
+            type:ADD_POST_SUCCESS, // post reducer 데이터를 수정
             data: result.data,
+        });
+        yield put({
+            type:ADD_POST_TO_ME, // user reducer 데이터를 수정
+            data: result.data.id,
         });
     } catch(e){
         yield put({
@@ -31,9 +35,7 @@ function* addPost(action){
 function* watchAddPost(){
     yield takeLatest(ADD_POST_REQUEST, addPost);
 }
-
-
-
+//
 function addCommentAPI(data){
     return axios.post(`/post/${data.postId}/comment`, {content : data.content}, {
         withCredentials: true,

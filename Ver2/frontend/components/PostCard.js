@@ -6,6 +6,7 @@ import { ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST, UNLIKE_POST_REQUEST, LIKE_P
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import Link from 'next/link';
+import { FOLLOW_USER_REQUEST, UNFOLLOW_USER_REQUEST } from '../reducers/user';
 const PostCard = ( { post}) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [commentText, setCommentText] = useState('');
@@ -68,6 +69,18 @@ const PostCard = ( { post}) => {
       data: post.id,
     })
   }, [me && me.id , post && post.id]);
+  const onFollow = useCallback( userId => () =>{ 
+    dispath({
+      type: FOLLOW_USER_REQUEST,
+      data: userId,
+    });
+  }, []);
+  const onUnfollow = useCallback( userId => () => {
+    dispath({
+      type: UNFOLLOW_USER_REQUEST,
+      data: userId,
+    });
+  }, []);
   return (
     <div>
     <Card
@@ -80,7 +93,11 @@ const PostCard = ( { post}) => {
       <Icon type="ellipsis" key="ellipsis"></Icon>
     ]}
     title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
-    extra={<Button>팔로우</Button>}
+    extra={!me || post.User.id === me.id ? null // 로그인안했을때, 자기 게시글일땐 안보임
+      : me.Followings && me.Followings.find(v => v.id === post.User.id) // 로그인 후 남의게시글 목록 볼때 작성자가 내 팔로잉 목록에 들어있을떄 (팔로잉중)
+      ? <Button onClick={onUnfollow(post.User.id)}>팔로우</Button>
+      : <Button onClick={onFollow(post.User.id)}>팔로우 취소</Button>
+    }
   >
     {post.RetweetId && post.Retweet ? (
      <Card

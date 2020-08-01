@@ -116,14 +116,69 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
         });
     })(req, res, next);
 });
-router.get('/:id/follow', (req, res) => {
-
+router.get('/:id/followings', isLoggedIn, async (req, res, next) => {
+    try{
+        const user = await db.User.findOne({
+            where : { id : parseInt(req.params.id , 10)}
+        })
+        const followers = await user.getFollowings({
+            attributes: ['id', 'nickname'],
+        })
+        res.json(followers);
+    }catch(e){
+        console.error(e);
+        next(e);
+    }
 });
-router.post('/:id/follow', (req, res) => {
-
+router.get('/:id/followers', isLoggedIn, async (req, res, next) => {
+    try{
+        const user = await db.User.findOne({
+            where : { id : parseInt(req.params.id , 10)}
+        })
+        const followers = await user.getFollowers({
+            attributes: ['id', 'nickname'],
+        })
+        res.json(followers);
+    }catch(e){
+        console.error(e);
+        next(e);
+    }
 });
-router.delete('/:id/follow', (req, res) => {
-
+router.delete('/:id/follower', isLoggedIn, async (req, res, next) => {
+    try{
+        const me = await db.User.findOne({
+            where : { id : req.user.id },
+        })
+        await me.removeFollower(req.params.id);
+        res.json(req.params.id);
+    }catch(e){
+        console.error(e);
+        next(e);
+    }
+});
+router.post('/:id/follow', isLoggedIn, async (req, res, next) => {
+    try{
+        const me = await db.User.findOne({
+            where: { id : req.user.id },
+        });
+        await me.addFollowing(req.params.id); // req.user.addFollowing 도 가능한데 간헐적으로 안될때가 있음
+        res.send(req.params.id);
+    }catch(e){
+        console.error(e);
+        next(e);
+    }
+});
+router.delete('/:id/follow', isLoggedIn, async  (req, res, next) => {
+    try{
+        const me = await db.User.findOne({
+            where: { id : req.user.id },
+        });
+        await me.removeFollowing(req.params.id); 
+        res.send(req.params.id);
+    }catch(e){
+        console.error(e);
+        next(e);
+    }
 });
 
 router.get('/:id/posts', async (req, res, next) => {
@@ -152,5 +207,17 @@ router.get('/:id/posts', async (req, res, next) => {
     }
   });
 
-
+router.patch('/nickname', isLoggedIn, async (req, res, next)=>{
+    try{
+        await db.User.update({
+            nickname : req.body.nickname,
+        },{
+            where: { id: req.user.id },
+        });
+        res.send(req.body.nickname);
+    }catch(e){
+        console.error(e);
+        next(e);
+    }
+})
 module.exports = router;

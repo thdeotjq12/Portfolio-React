@@ -1,12 +1,3 @@
-const dummyUser = {
-    nickname: "Guest",
-    Post: [],
-    Followings: [],
-    Followers: [],
-    signUpData: {},
-    id:1,
-};
-
 export const initialState = {
     isLoggingOut: false, // 로그아웃 시도중
     isLoggingIn: false, // 로그인 시도중
@@ -17,7 +8,10 @@ export const initialState = {
     me: null, // 내정보
     followingList: [], // 팔로잉 리스트
     followerList: [],  // 팔로워 리스트
-    userInfo: null // 남의 정보
+    userInfo: null, // 남의 정보
+    isEditingNickname: false, // 이름 변경 중
+    editNicknameErrorReason: '', // 이름 변경 실패 사유
+
 };
 // 리덕스의 액션은 동기적으로 실행되기 떄문에 saga를 이용해 비동기를 구현함
 //회원가입
@@ -36,10 +30,14 @@ export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
 export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
-//팔로우 목록
-export const LOAD_FOLLOW_REQUEST = 'LOAD_FOLLOW_REQUEST';
-export const LOAD_FOLLOW_SUCCESS = 'LOAD_FOLLOW_SUCCESS';
-export const LOAD_FOLLOW_FAILURE = 'LOAD_FOLLOW_FAILURE';
+//팔로워들 목록
+export const LOAD_FOLLOWERS_REQUEST = 'LOAD_FOLLOWERS_REQUEST';
+export const LOAD_FOLLOWERS_SUCCESS = 'LOAD_FOLLOWERS_SUCCESS';
+export const LOAD_FOLLOWERS_FAILURE = 'LOAD_FOLLOWERS_FAILURE';
+//팔로잉 목록
+export const LOAD_FOLLOWINGS_REQUEST = 'LOAD_FOLLOWINGS_REQUEST';
+export const LOAD_FOLLOWINGS_SUCCESS = 'LOAD_FOLLOWINGS_SUCCESS';
+export const LOAD_FOLLOWINGS_FAILURE = 'LOAD_FOLLOWINGS_FAILURE';
 //다른 사람을 팔로우
 export const FOLLOW_USER_REQUEST = 'FOLLOW_USER_REQUEST';
 export const FOLLOW_USER_SUCCESS = 'FOLLOW_USER_SUCCESS';
@@ -52,6 +50,10 @@ export const UNFOLLOW_USER_FAILURE = 'UNFOLLOW_USER_FAILURE';
 export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST';
 export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS';
 export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
+//닉네임 수정
+export const EDIT_NICKNAME_REQUEST = 'EDIT_NICKNAME_REQUEST';
+export const EDIT_NICKNAME_SUCCESS = 'EDIT_NICKNAME_SUCCESS';
+export const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE';
 //리듀서의 단점때문에 만들어야 됨
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 
@@ -124,15 +126,142 @@ const reducer = ( state = initialState, action) => {
             };
         }
         case LOAD_USER_SUCCESS: {
-            return{
-                ...state,
-                me: action.data,
-            };
+            if(action.me){
+                return{
+                    ...state,
+                    me: action.data,
+                };
+            }
         }
         case LOAD_USER_FAILURE: {
             return{
                 ...state,
             };
+        }
+        case FOLLOW_USER_REQUEST: {
+            return{
+                ...state,
+            };
+        }
+        case FOLLOW_USER_SUCCESS: {
+            return{
+                ...state,
+                me: {
+                    ...state.me,
+                    Followings:[{ id: action.data }, ...state.me.Followings],//아이디 목록에 팔로윙한 사람 추가(나)
+                }
+            };
+        }
+        case FOLLOW_USER_FAILURE: {
+            return{
+                ...state,
+            };
+        }
+        case UNFOLLOW_USER_REQUEST: {
+            return{
+                ...state,
+            };
+        }
+        case UNFOLLOW_USER_SUCCESS: {
+            return{
+                ...state,
+                me: {
+                    ...state.me,
+                    Followings: state.me.Followings.filter(v => v.id !== action.data),//아이디 목록에 팔로윙한 사람 추가(나)
+                },
+                followingList: state.followingList.filter(v => v.id !== action.data),
+            };
+        }
+        case UNFOLLOW_USER_FAILURE: {
+            return{
+                ...state,
+            };
+        }
+        case LOAD_FOLLOWERS_REQUEST: {
+            return{
+                ...state,
+            };
+        }
+        case LOAD_FOLLOWERS_SUCCESS: {
+            return{
+                ...state,
+                
+            };
+        }
+        case LOAD_FOLLOWERS_FAILURE: {
+            return{
+                ...state,
+                followerList : action.data,
+            };
+        }
+        case LOAD_FOLLOWINGS_REQUEST: {
+            return{
+                ...state,
+            };
+        }
+        case LOAD_FOLLOWINGS_SUCCESS: {
+            return{
+                ...state,
+                followerList : action.data,
+            };
+        }
+        case LOAD_FOLLOWINGS_FAILURE: {
+            return{
+                ...state,
+            };
+        }
+        case REMOVE_FOLLOWER_REQUEST: {
+            return{
+                ...state,
+            };
+        }
+        case REMOVE_FOLLOWER_SUCCESS: {
+            return{
+                ...state,
+                me: {
+                    ...state.me,
+                    Followers: state.me.Followers.filter(v => v.id !== action.data),//아이디 목록에 팔로윙한 사람 추가(나)
+                },
+                followerList: state.followerList.filter(v => v.id !== action.data),
+            };
+        }
+        case REMOVE_FOLLOWER_FAILURE: {
+            return{
+                ...state,
+            };
+        }
+        case EDIT_NICKNAME_REQUEST: {
+            return{
+                ...state,
+                isEditingNickname: true,
+                editNicknameErrorReason: '',
+            };
+        }
+        case EDIT_NICKNAME_SUCCESS: {
+            return{
+                ...state,
+                isEditingNickname: false,
+                me: {
+                    ...state.me,
+                    nickname: action.data,
+                }
+            };
+        }
+        case EDIT_NICKNAME_FAILURE: {
+            return{
+                ...state,
+                isEditingNickname: false,
+                editNicknameErrorReason: action.error,
+            };
+        }
+        case ADD_POST_TO_ME:{
+            return {
+                ...state,
+                me: {
+                    ...state.me,
+                    Posts: [{ id: action.data}, ...state.me.Posts],
+                }
+            }
         }
         default: {
             return{

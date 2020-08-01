@@ -1,7 +1,43 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { Form,  Button, Input, Card, Icon , List } from "antd";
-import NicknameEditForm from '../components/NicknameEditForm';
+import { useDispatch, useSelector} from 'react-redux';
+import NicknameEditForm from '../components/NicknameEditForm'; // 폼은 state가 빈번하게 변하므로 분리를 해주자
+import PostCard from '../components/PostCard';
+import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST, UNFOLLOW_USER_REQUEST, REMOVE_FOLLOWER_REQUEST } from "../reducers/user";
+import { LOAD_USER_POSTS_REQUEST } from "../reducers/post";
 const Profile = () => {
+  const dispatch = useDispatch();
+  const { me, followerList, followingList } = useSelector(state => state.user);
+  const { mainPosts } = useSelector(state => state.post);
+  
+  useEffect(()=> {
+    if(me){
+      dispatch({
+        type: LOAD_FOLLOWERS_REQUEST,
+        data: me.id,
+      });
+      dispatch({
+        type: LOAD_FOLLOWINGS_REQUEST,
+        data: me.id,
+      });
+      dispatch({
+        type: LOAD_USER_POSTS_REQUEST,
+        data: me.id,
+      });
+    }
+  }, [me && me.id])
+  const onUnfollow = useCallback(userId => () => {
+    dispatch({
+      type: UNFOLLOW_USER_REQUEST,
+      data: userId,
+    })
+  },[])
+  const onRemoveFollower = useCallback(userId => () => {
+    dispatch({
+      type: REMOVE_FOLLOWER_REQUEST,
+      data: userId,
+    })
+  },[])
   return (
     <div>
       <NicknameEditForm />
@@ -12,10 +48,12 @@ const Profile = () => {
         size ="small"
         loadMore={<Button style={{width: '100%'}}>더 보기</Button>}
         bordered
-        dataSource={['제로초','바보','노드버드오피셜']}
+        dataSource={followingList}
         renderItem={item => (
           <List.Item style ={{ marginTop :'20px'}}>
-            <Card actions={[<Icon key="stop" type="stop"></Icon>]}> <Card.Meta description={item}></Card.Meta> </Card>
+            <Card actions={[<Icon key="stop" type="stop" onClick={onUnfollow(item.id)}></Icon>]}> 
+              <Card.Meta description={item.nickname}></Card.Meta> 
+            </Card>
           </List.Item>
         )}
       >
@@ -26,14 +64,21 @@ const Profile = () => {
         header={<div>팔로워 목록</div>}
         loadMore={<Button style={{width: '100%'}}>더 보기</Button>}
         bordered
-        dataSource={['제로초','바보','노드버드오피셜']}
+        dataSource={followerList}
         renderItem={item => (
           <List.Item style ={{ marginTop :'20px'}}>
             {/* 배열안에 jsx 쓸때는 key를 꼭 넣어주자( []:반복문을 의미, 넣어줘야 인식됨) */}
-            <Card actions={[<Icon key="stop" type="stop"></Icon>]}> <Card.Meta description={item}></Card.Meta> </Card>
+            <Card actions={[<Icon key="stop" type="stop" onClick={onRemoveFollower(item.id)}></Icon>]}> 
+              <Card.Meta description={item.nickname}></Card.Meta> 
+            </Card>
           </List.Item>
         )}>
      </List>
+     <div>
+        {mainPosts ? mainPosts.map(c => (
+            <PostCard key={+c.createdAt} post={c}></PostCard> 
+        )): null} 
+     </div> 
     </div>
   );
 };
