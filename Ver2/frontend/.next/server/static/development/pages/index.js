@@ -5125,17 +5125,22 @@ const Home = () => {
     mainPosts
   } = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(state => state.post);
   const dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useDispatch"])();
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    dispatch({
-      type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["LOAD_MAIN_POSTS_REQUEST"]
-    });
-  }, []);
   return __jsx("div", null, me && __jsx(_components_PostForm__WEBPACK_IMPORTED_MODULE_1__["default"], null), mainPosts.map(c => {
     return __jsx(_components_PostCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
       key: c,
       post: c
     });
   }));
+}; // context 는 _app.js 에서 pageProps = await Component.getInitialProps(ctx); 의 ctx 임, context안에는 store 있고,
+// store안에 리덕스 함수들이 있음
+
+
+Home.getInitialProps = async context => {
+  // console.log(Object.keys(context));
+  // 1. SSR: 이렇게 디스패치를 여기서 해줌, 2. _app.js 에 withReduxSaga 추가(next 용 리덕스 사가)
+  context.store.dispatch({
+    type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["LOAD_MAIN_POSTS_REQUEST"]
+  });
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Home);

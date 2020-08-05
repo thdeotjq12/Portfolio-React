@@ -6,9 +6,12 @@ import PropTypes from "prop-types";
 import reducer from "../reducers"; 
 import { Provider } from 'react-redux'; // 리덕스 스테이트를 제공해줌(컴포넌트)
 import createSagaMiddleware from 'redux-saga';
+import withReduxSaga from 'next-redux-saga';
 import withRedux from 'next-redux-wrapper'
 import { createStore, applyMiddleware, compose} from 'redux';
 import rootSaga from "../sagas";
+import { LOAD_USER_REQUEST } from "../reducers/user";
+import axios from "axios";
 
 const Portfolio = ({ Component, store, pageProps }) => {
   return (
@@ -38,10 +41,21 @@ Portfolio.propTypes = {
   pageProps : PropTypes.object.isRequired,
 };
 
-Portfolio.getInitialProps = async(context) =>{
+Portfolio.getInitialProps = async (context) =>{
   console.log(context);
   const { ctx, Component } = context;
   let pageProps = {};
+  const state = ctx.store.getState();// AppLayout 부분 SSR구조변경 
+  // 리덕스 사가 호출순서 대로 코딩할 것.
+  const cookie = ctx.isServer ? ctx.req.headers.cookie : '';// 클라이언트>서버 구조일땐 브라우저가 쿠키를 같이 넣어줬었는데(withCridentials:true),
+  if(ctx.isServer && cookie){ // 서버일때(SSR)와 아닐때가 있기때문에 분기처리 해줌
+    axios.defaults.headers.Cookie = cookie; // SSR은 직접 쿠키를 넣어줘야함
+  }
+  if(!state.user.me){ // AppLayout 에서 !me 일때 디스패치 해줬던 것 - 스토어에서 me 정보를 가져오기
+    ctx.store.dispatch({
+      type: LOAD_USER_REQUEST,
+    })
+  }
   if(Component.getInitialProps){
     pageProps = await Component.getInitialProps(ctx);  // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)
   }
@@ -55,8 +69,8 @@ const configureStore = (initialState, options) => {
   const enhancer = process.env.NODE_ENV === 'production' ? compose(applyMiddleware(...middlewares),) : compose(applyMiddleware(...middlewares), !options.isServer && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f, ) 
   const store = createStore(reducer, initialState, enhancer);
   // 여기에 store 커스터마이징
-  sagaMiddleware.run(rootSaga);
+  store.sagaTask = sagaMiddleware.run(rootSaga); //SSR 추가
   return store;
 }
 
-export default withRedux(configureStore)(Portfolio);// 컴포넌트를 감싸줌(고차 컴포넌트- 기존컴포넌트 확장)
+export default withRedux(configureStore)(withReduxSaga(Portfolio));// 컴포넌트를 감싸줌(고차 컴포넌트- 기존컴포넌트 확장)

@@ -131,14 +131,6 @@ const AppLayout = ({
   const {
     me
   } = Object(react_redux__WEBPACK_IMPORTED_MODULE_6__["useSelector"])(state => state.user);
-  const dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_6__["useDispatch"])();
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    if (!me) {
-      dispatch({
-        type: _reducers_user__WEBPACK_IMPORTED_MODULE_7__["LOAD_USER_REQUEST"]
-      });
-    }
-  }, []);
   return __jsx("div", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Menu"], {
     mode: "horizontal"
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Menu"].Item, {
@@ -4701,11 +4693,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var redux_saga__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! redux-saga */ "redux-saga");
 /* harmony import */ var redux_saga__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(redux_saga__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var next_redux_wrapper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! next-redux-wrapper */ "next-redux-wrapper");
-/* harmony import */ var next_redux_wrapper__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(next_redux_wrapper__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! redux */ "redux");
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(redux__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _sagas__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../sagas */ "./sagas/index.js");
+/* harmony import */ var next_redux_saga__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! next-redux-saga */ "next-redux-saga");
+/* harmony import */ var next_redux_saga__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(next_redux_saga__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var next_redux_wrapper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! next-redux-wrapper */ "next-redux-wrapper");
+/* harmony import */ var next_redux_wrapper__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(next_redux_wrapper__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! redux */ "redux");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(redux__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _sagas__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../sagas */ "./sagas/index.js");
+/* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_12__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 // root , 모든 페이지의 레이아웃 역할
 
@@ -4714,6 +4711,9 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
  // 리덕스 스테이트를 제공해줌(컴포넌트)
+
+
+
 
 
 
@@ -4762,6 +4762,22 @@ Portfolio.getInitialProps = async context => {
     Component
   } = context;
   let pageProps = {};
+  const state = ctx.store.getState(); // AppLayout 부분 SSR구조변경 
+  // 리덕스 사가 호출순서 대로 코딩할 것.
+
+  const cookie = ctx.isServer ? ctx.req.headers.cookie : ''; // 클라이언트>서버 구조일땐 브라우저가 쿠키를 같이 넣어줬었는데(withCridentials:true),
+
+  if (ctx.isServer && cookie) {
+    // 서버일때(SSR)와 아닐때가 있기때문에 분기처리 해줌
+    axios__WEBPACK_IMPORTED_MODULE_12___default.a.defaults.headers.Cookie = cookie; // SSR은 직접 쿠키를 넣어줘야함
+  }
+
+  if (!state.user.me) {
+    // AppLayout 에서 !me 일때 디스패치 해줬던 것 - 스토어에서 me 정보를 가져오기
+    ctx.store.dispatch({
+      type: _reducers_user__WEBPACK_IMPORTED_MODULE_11__["LOAD_USER_REQUEST"]
+    });
+  }
 
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx); // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)
@@ -4776,14 +4792,15 @@ const configureStore = (initialState, options) => {
   const sagaMiddleware = redux_saga__WEBPACK_IMPORTED_MODULE_6___default()();
   const middlewares = [sagaMiddleware]; // 보안상 아래 부분은 실 배포용인지 개발용인지 구분
 
-  const enhancer = false ? undefined : Object(redux__WEBPACK_IMPORTED_MODULE_8__["compose"])(Object(redux__WEBPACK_IMPORTED_MODULE_8__["applyMiddleware"])(...middlewares), !options.isServer && false && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f);
-  const store = Object(redux__WEBPACK_IMPORTED_MODULE_8__["createStore"])(_reducers__WEBPACK_IMPORTED_MODULE_4__["default"], initialState, enhancer); // 여기에 store 커스터마이징
+  const enhancer = false ? undefined : Object(redux__WEBPACK_IMPORTED_MODULE_9__["compose"])(Object(redux__WEBPACK_IMPORTED_MODULE_9__["applyMiddleware"])(...middlewares), !options.isServer && false && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f);
+  const store = Object(redux__WEBPACK_IMPORTED_MODULE_9__["createStore"])(_reducers__WEBPACK_IMPORTED_MODULE_4__["default"], initialState, enhancer); // 여기에 store 커스터마이징
 
-  sagaMiddleware.run(_sagas__WEBPACK_IMPORTED_MODULE_9__["default"]);
+  store.sagaTask = sagaMiddleware.run(_sagas__WEBPACK_IMPORTED_MODULE_10__["default"]); //SSR 추가
+
   return store;
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (next_redux_wrapper__WEBPACK_IMPORTED_MODULE_7___default()(configureStore)(Portfolio)); // 컴포넌트를 감싸줌(고차 컴포넌트- 기존컴포넌트 확장)
+/* harmony default export */ __webpack_exports__["default"] = (next_redux_wrapper__WEBPACK_IMPORTED_MODULE_8___default()(configureStore)(next_redux_saga__WEBPACK_IMPORTED_MODULE_7___default()(Portfolio))); // 컴포넌트를 감싸줌(고차 컴포넌트- 기존컴포넌트 확장)
 
 /***/ }),
 
@@ -6373,6 +6390,17 @@ module.exports = require("antd");
 /***/ (function(module, exports) {
 
 module.exports = require("axios");
+
+/***/ }),
+
+/***/ "next-redux-saga":
+/*!**********************************!*\
+  !*** external "next-redux-saga" ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("next-redux-saga");
 
 /***/ }),
 
