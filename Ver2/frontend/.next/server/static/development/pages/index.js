@@ -348,6 +348,12 @@ const PostCard = ({
       data: userId
     });
   }, []);
+  const onRemovePost = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(userId => () => {
+    dispath({
+      type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["REMOVE_POST_REQUEST"],
+      data: userId
+    });
+  });
   return __jsx("div", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
     key: +post.createdAt,
     cover: post.Images[0] && __jsx(_PostImages__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -367,18 +373,23 @@ const PostCard = ({
       type: "message",
       key: "message",
       onClick: onToggleComment
-    }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
-      type: "ellipsis",
-      key: "ellipsis"
-    })],
+    }), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Popover"], {
+      key: "ellipsis",
+      content: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"].Group, null, me && post.UserId === me.id ? __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], null, "\uC218\uC815"), __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        type: "danger",
+        onClick: onRemovePost(post.id)
+      }, "\uC0AD\uC81C")) : __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], null, "\uC2E0\uACE0"))
+    }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
+      type: "ellipsis"
+    }))],
     title: post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null,
     extra: !me || post.User.id === me.id ? null // 로그인안했을때, 자기 게시글일땐 안보임
     : me.Followings && me.Followings.find(v => v.id === post.User.id) // 로그인 후 남의게시글 목록 볼때 작성자가 내 팔로잉 목록에 들어있을떄 (팔로잉중)
     ? __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
       onClick: onUnfollow(post.User.id)
-    }, "\uD314\uB85C\uC6B0") : __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    }, "\uD314\uB85C\uC6B0 \uCDE8\uC18C") : __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Button"], {
       onClick: onFollow(post.User.id)
-    }, "\uD314\uB85C\uC6B0 \uCDE8\uC18C")
+    }, "\uD314\uB85C\uC6B0")
   }, post.RetweetId && post.Retweet ? __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
     cover: post.Retweet.Images[0] && __jsx(_PostImages__WEBPACK_IMPORTED_MODULE_5__["default"], {
       images: post.Retweet.Images
@@ -5125,6 +5136,27 @@ const Home = () => {
     mainPosts
   } = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(state => state.post);
   const dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useDispatch"])();
+
+  const onScroll = () => {
+    //window.scrollY:현재위치, clientHeight: 스크롤바의 높이(현재화면), scrollHeight: 맨위에서 맨아래까지의 높이
+    console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
+
+    if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+      dispatch({
+        type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["LOAD_MAIN_POSTS_REQUEST"],
+        lastId: mainPosts[mainPosts.length - 1].id // 마지막게시글 기준으로 다음게시글 불러옴(게시글 보고있는데 새 게시글이 추가되면, 밀려서 불러오게되서 마지막 게시글을 기준으로 계산해서 불러오기) 
+
+      });
+    }
+  };
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      // 이벤트 사용하고 나서 꼭 정리해주자
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [mainPosts.length]);
   return __jsx("div", null, me && __jsx(_components_PostForm__WEBPACK_IMPORTED_MODULE_1__["default"], null), mainPosts.map(c => {
     return __jsx(_components_PostCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
       key: c,
@@ -5475,6 +5507,23 @@ const reducer = (state = initialState, action) => {
         return _objectSpread({}, state);
       }
 
+    case REMOVE_POST_REQUEST:
+      {
+        return _objectSpread({}, state);
+      }
+
+    case REMOVE_POST_SUCCESS:
+      {
+        return _objectSpread({}, state, {
+          mainPosts: state.mainPosts.filter(v => v.id !== action.data)
+        });
+      }
+
+    case REMOVE_POST_FAILURE:
+      {
+        return _objectSpread({}, state);
+      }
+
     default:
       {
         return _objectSpread({}, state);
@@ -5490,7 +5539,7 @@ const reducer = (state = initialState, action) => {
 /*!**************************!*\
   !*** ./reducers/user.js ***!
   \**************************/
-/*! exports provided: initialState, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE, LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE, LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWERS_SUCCESS, LOAD_FOLLOWERS_FAILURE, LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_FOLLOWINGS_FAILURE, FOLLOW_USER_REQUEST, FOLLOW_USER_SUCCESS, FOLLOW_USER_FAILURE, UNFOLLOW_USER_REQUEST, UNFOLLOW_USER_SUCCESS, UNFOLLOW_USER_FAILURE, REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS, REMOVE_FOLLOWER_FAILURE, EDIT_NICKNAME_REQUEST, EDIT_NICKNAME_SUCCESS, EDIT_NICKNAME_FAILURE, ADD_POST_TO_ME, default */
+/*! exports provided: initialState, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE, LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE, LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWERS_SUCCESS, LOAD_FOLLOWERS_FAILURE, LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_FOLLOWINGS_FAILURE, FOLLOW_USER_REQUEST, FOLLOW_USER_SUCCESS, FOLLOW_USER_FAILURE, UNFOLLOW_USER_REQUEST, UNFOLLOW_USER_SUCCESS, UNFOLLOW_USER_FAILURE, REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS, REMOVE_FOLLOWER_FAILURE, EDIT_NICKNAME_REQUEST, EDIT_NICKNAME_SUCCESS, EDIT_NICKNAME_FAILURE, ADD_POST_TO_ME, REMOVE_POST_OF_ME, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5527,6 +5576,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDIT_NICKNAME_SUCCESS", function() { return EDIT_NICKNAME_SUCCESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDIT_NICKNAME_FAILURE", function() { return EDIT_NICKNAME_FAILURE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_POST_TO_ME", function() { return ADD_POST_TO_ME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_POST_OF_ME", function() { return REMOVE_POST_OF_ME; });
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -5556,8 +5606,11 @@ const initialState = {
   // 남의 정보
   isEditingNickname: false,
   // 이름 변경 중
-  editNicknameErrorReason: '' // 이름 변경 실패 사유
-
+  editNicknameErrorReason: '',
+  // 이름 변경 실패 사유
+  hasMoreFollower: false,
+  // 프로필 - 팔로워 불러오다 더이상 없을 시 더보기 버튼 제거
+  hasMoreFollowing: false
 }; // 리덕스의 액션은 동기적으로 실행되기 떄문에 saga를 이용해 비동기를 구현함
 //회원가입
 
@@ -5599,9 +5652,11 @@ const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE'; //닉네임 수정
 
 const EDIT_NICKNAME_REQUEST = 'EDIT_NICKNAME_REQUEST';
 const EDIT_NICKNAME_SUCCESS = 'EDIT_NICKNAME_SUCCESS';
-const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE'; //리듀서의 단점때문에 만들어야 됨
+const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE'; //리듀서의 단점때문에 만들어야 됨 - 다른 리듀서의 정보를 수정할 수 없음
 
-const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
+const ADD_POST_TO_ME = 'ADD_POST_TO_ME'; //
+
+const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -5736,32 +5791,50 @@ const reducer = (state = initialState, action) => {
         return _objectSpread({}, state);
       }
 
+    case REMOVE_POST_OF_ME:
+      {
+        return _objectSpread({}, state, {
+          me: _objectSpread({}, state.me, {
+            Posts: state.me.Posts.filter(v => v.id !== action.data)
+          })
+        });
+      }
+
     case LOAD_FOLLOWERS_REQUEST:
       {
-        return _objectSpread({}, state);
+        return _objectSpread({}, state, {
+          hasMoreFollower: action.offset ? state.hasMoreFollower : true // action.offset 은 더보기 버튼 처음 클릭 시 생김(더보기 버튼 보여줌)
+
+        });
       }
 
     case LOAD_FOLLOWERS_SUCCESS:
       {
-        return _objectSpread({}, state);
+        return _objectSpread({}, state, {
+          followerList: state.followerList.concat(action.data),
+          // 기존데이터에 계속 리스트를 추가시킴(더보기 기능)
+          hasMoreFollower: action.data.length === 3 // 가져온 데이터가 3개면 더보기 버튼을 계속 보여줌(1,2개면 없어짐)
+
+        });
       }
 
     case LOAD_FOLLOWERS_FAILURE:
       {
-        return _objectSpread({}, state, {
-          followerList: action.data
-        });
+        return _objectSpread({}, state);
       }
 
     case LOAD_FOLLOWINGS_REQUEST:
       {
-        return _objectSpread({}, state);
+        return _objectSpread({}, state, {
+          hasMoreFollowing: action.offset ? state.hasMoreFollowing : true
+        });
       }
 
     case LOAD_FOLLOWINGS_SUCCESS:
       {
         return _objectSpread({}, state, {
-          followerList: action.data
+          followingList: state.followingList.concat(action.data),
+          hasMoreFollowing: action.data.length === 3
         });
       }
 

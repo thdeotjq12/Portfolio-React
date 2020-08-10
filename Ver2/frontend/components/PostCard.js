@@ -1,8 +1,8 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import { Card , Icon, Button, Avatar, Input, List, Form, Comment} from 'antd';
+import { Card , Icon, Button, Avatar, Input, List, Form, Comment, Popover} from 'antd';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
-import { ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST, UNLIKE_POST_REQUEST, LIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
+import { ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST, UNLIKE_POST_REQUEST, LIKE_POST_REQUEST, RETWEET_REQUEST, REMOVE_POST_REQUEST } from '../reducers/post';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import Link from 'next/link';
@@ -81,24 +81,46 @@ const PostCard = ( { post}) => {
       data: userId,
     });
   }, []);
+  const onRemovePost = useCallback( userId => ()=>{
+    dispath({
+      type: REMOVE_POST_REQUEST,
+      data: userId,
+    });
+  });
   return (
     <div>
     <Card
-    key={+post.createdAt}
-    cover={post.Images[0] && <PostImages images={post.Images}></PostImages>}
-    actions={[
-      <Icon type="retweet" key="retweet" onClick={onRetweet}></Icon>,
-      <Icon type="heart" key="heart" theme={liked ? 'twoTone' : 'outlined'} twoToneColor="#eb2f96" onClick={onToggleLike}></Icon>,
-      <Icon type="message" key="message" onClick={onToggleComment}></Icon>,
-      <Icon type="ellipsis" key="ellipsis"></Icon>
-    ]}
-    title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
-    extra={!me || post.User.id === me.id ? null // 로그인안했을때, 자기 게시글일땐 안보임
-      : me.Followings && me.Followings.find(v => v.id === post.User.id) // 로그인 후 남의게시글 목록 볼때 작성자가 내 팔로잉 목록에 들어있을떄 (팔로잉중)
-      ? <Button onClick={onUnfollow(post.User.id)}>팔로우</Button>
-      : <Button onClick={onFollow(post.User.id)}>팔로우 취소</Button>
-    }
-  >
+      key={+post.createdAt}
+      cover={post.Images[0] && <PostImages images={post.Images}></PostImages>}
+      actions={[
+        <Icon type="retweet" key="retweet" onClick={onRetweet}></Icon>,
+        <Icon type="heart" key="heart" theme={liked ? 'twoTone' : 'outlined'} twoToneColor="#eb2f96" onClick={onToggleLike}></Icon>,
+        <Icon type="message" key="message" onClick={onToggleComment}></Icon>,
+        <Popover
+          key="ellipsis"
+          content={(
+            <Button.Group>
+              {me && post.UserId === me.id
+                ? (
+                  <>
+                    <Button>수정</Button>
+                    <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
+                  </>
+                )
+                : <Button>신고</Button>}
+            </Button.Group>
+          )}
+        >
+            <Icon type="ellipsis" />
+        </Popover>,
+      ]}
+      title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
+      extra={!me || post.User.id === me.id ? null // 로그인안했을때, 자기 게시글일땐 안보임
+        : me.Followings && me.Followings.find(v => v.id === post.User.id) // 로그인 후 남의게시글 목록 볼때 작성자가 내 팔로잉 목록에 들어있을떄 (팔로잉중)
+        ? <Button onClick={onUnfollow(post.User.id)}>팔로우 취소</Button>
+        : <Button onClick={onFollow(post.User.id)}>팔로우</Button>
+      }
+    >
     {post.RetweetId && post.Retweet ? (
      <Card
         cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}></PostImages>}

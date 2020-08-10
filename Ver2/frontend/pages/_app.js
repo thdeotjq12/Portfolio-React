@@ -64,7 +64,10 @@ Portfolio.getInitialProps = async (context) =>{
 
 const configureStore = (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [sagaMiddleware];
+  const middlewares = [sagaMiddleware , (store)=>(next)=>(action)=>{ //리덕스 사가 에러 찾는법 - 커스텀 미들웨어
+    console.log(action);
+    next(action);
+  }];
   // 보안상 아래 부분은 실 배포용인지 개발용인지 구분
   const enhancer = process.env.NODE_ENV === 'production' ? compose(applyMiddleware(...middlewares),) : compose(applyMiddleware(...middlewares), !options.isServer && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f, ) 
   const store = createStore(reducer, initialState, enhancer);

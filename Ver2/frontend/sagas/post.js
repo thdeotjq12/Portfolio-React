@@ -4,9 +4,9 @@ import { ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
         LOAD_MAIN_POSTS_REQUEST, LOAD_MAIN_POSTS_SUCCESS, LOAD_MAIN_POSTS_FAILURE, 
         LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_FAILURE, 
         LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE, LOAD_USER_POSTS_REQUEST,
-        LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_FAILURE, LOAD_COMMENTS_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, UPLOAD_IMAGES_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, LIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE, UNLIKE_POST_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE, RETWEET_REQUEST} from '../reducers/post';
+        LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_FAILURE, LOAD_COMMENTS_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, UPLOAD_IMAGES_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, LIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE, UNLIKE_POST_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE, RETWEET_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE, REMOVE_POST_REQUEST} from '../reducers/post';
 import axios from 'axios';
-import { ADD_POST_TO_ME } from '../reducers/user';
+import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
 
 function addPostAPI(postData){
@@ -63,12 +63,12 @@ function* watchAddComment(){
 }
 
 //
-function loadMainPostsAPI(){
-    return axios.get('/posts'); // 게시글을 보는정도의 api는 크리덴셜 안넣어줘도 무방
+function loadMainPostsAPI(lastId = 0, limit = 10){ // 게시글 하나도 안불러와져 있으면 0( 서버에서 0이면 처음부터 불러오게 하면됨)
+    return axios.get(`/posts?lastId=${lastId}&limit=${limit}`); // 게시글을 보는정도의 api는 크리덴셜 안넣어줘도 무방
 }
-function* loadMainPosts(){
+function* loadMainPosts(action){
     try{
-        const result = yield call(loadMainPostsAPI);
+        const result = yield call(loadMainPostsAPI, action.lastId);
         yield put({
             type:LOAD_MAIN_POSTS_SUCCESS,
             data: result.data,
@@ -85,8 +85,8 @@ function* watchloadMainPosts(){
 }
 //
 
-function loadHashtagPostsAPI(tag){
-    return axios.get(`/hashtag/${tag}`); 
+function loadHashtagPostsAPI(tag, lastId){
+    return axios.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}`); //주소에 한글이 들어가면 에러가 날 수 있음
 }
 // function loadHashtagPostsAPI(data) {
 //     console.log("COME", encodeURIComponent(data));
@@ -95,7 +95,7 @@ function loadHashtagPostsAPI(tag){
 
 function* loadHashtagPosts(action){
     try{
-        const result = yield call(loadHashtagPostsAPI, action.data);
+        const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
         yield put({
             type:LOAD_HASHTAG_POSTS_SUCCESS,
             data: result.data,
@@ -114,7 +114,7 @@ function* watchLoadHashtagPosts(){
 
 
 function loadUserPostsAPI(id){
-    return axios.get(`/user/${id}/posts`); // 게시글을 보는정도의 api는 크리덴셜 안넣어줘도 무방
+    return axios.get(`/user/${id || 0}/posts`); // 게시글을 보는정도의 api는 크리덴셜 안넣어줘도 무방
 }
 function* loadUserPosts(action){
     try{
@@ -260,6 +260,34 @@ function* watchRetweet(){
     yield takeLatest(RETWEET_REQUEST, retweet);
 }
 //
+function removePostAPI(postId){
+    return axios.delete(`/post/${postId}`, {
+        withCredentials: true,
+    })
+}
+function* removePost(action){
+    try{
+        const result = yield call(removePostAPI, action.data);
+        yield put({
+            type: REMOVE_POST_SUCCESS,
+            data: result.data,
+        });
+        yield put({
+            type: REMOVE_POST_OF_ME,
+            data: result.data,
+        });
+    } catch(e){
+        yield put({
+            type: REMOVE_POST_FAILURE,
+            error: e,
+        });
+        alert(e.response && e.response.data );
+    }
+}
+function* watchRemovePost(){
+    yield takeLatest(REMOVE_POST_REQUEST, removePost);
+}
+//
 export default function* postSaga() {
     yield all([
         fork(watchAddPost),
@@ -272,5 +300,6 @@ export default function* postSaga() {
         fork(watchLikePost),
         fork(watchUnlikePost),
         fork(watchRetweet),
+        fork(watchRemovePost),
     ])
 };

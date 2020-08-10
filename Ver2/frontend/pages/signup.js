@@ -78,6 +78,9 @@ const Signup = () => {
     setTermError(false);
     setTerm(e.target.checked);
   }, []);
+  if(me){
+    return null;
+  }
 
   return (
     <>

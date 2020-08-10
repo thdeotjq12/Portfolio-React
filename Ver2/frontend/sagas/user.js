@@ -161,14 +161,14 @@ function* watchUnfollow(){
     yield takeEvery(UNFOLLOW_USER_REQUEST, unfollow)
 }
 //
-function loadFollowersAPI(userId){
-    return axios.get(`/user/${userId}/followers`, {
+function loadFollowersAPI(userId, offset = 0, limit = 3){
+    return axios.get(`/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`, { // 서버쪽에 부가적인 데이터를 보낼때 "쿼리스트링 key=value"
         withCredentials : true,
     });
 }
 function*loadFollowers(action){ 
     try{
-        const result = yield call(loadFollowersAPI, action.data); 
+        const result = yield call(loadFollowersAPI, action.data, action.offset); 
         yield put({ 
             type:LOAD_FOLLOWERS_SUCCESS,
             data: result.data,
@@ -185,14 +185,14 @@ function* watchLoadFollowers(){
     yield takeEvery(LOAD_FOLLOWERS_REQUEST, loadFollowers)
 }
 //
-function loadFollowingsAPI(userId){
-    return axios.get(`/user/${userId}/followings`, {
+function loadFollowingsAPI(userId, offset = 0, limit = 3){
+    return axios.get(`/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`, {
         withCredentials : true,
     });
 }
 function*loadFollowings(action){ 
     try{
-        const result = yield call(loadFollowingsAPI, action.data); 
+        const result = yield call(loadFollowingsAPI, action.data, action.offset); 
         yield put({ 
             type:LOAD_FOLLOWINGS_SUCCESS,
             data: result.data,

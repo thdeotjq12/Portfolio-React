@@ -11,7 +11,8 @@ export const initialState = {
     userInfo: null, // 남의 정보
     isEditingNickname: false, // 이름 변경 중
     editNicknameErrorReason: '', // 이름 변경 실패 사유
-
+    hasMoreFollower : false, // 프로필 - 팔로워 불러오다 더이상 없을 시 더보기 버튼 제거
+    hasMoreFollowing : false,
 };
 // 리덕스의 액션은 동기적으로 실행되기 떄문에 saga를 이용해 비동기를 구현함
 //회원가입
@@ -54,9 +55,10 @@ export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
 export const EDIT_NICKNAME_REQUEST = 'EDIT_NICKNAME_REQUEST';
 export const EDIT_NICKNAME_SUCCESS = 'EDIT_NICKNAME_SUCCESS';
 export const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE';
-//리듀서의 단점때문에 만들어야 됨
+//리듀서의 단점때문에 만들어야 됨 - 다른 리듀서의 정보를 수정할 수 없음
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
-
+//
+export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 const reducer = ( state = initialState, action) => {
     switch (action.type){
@@ -177,32 +179,44 @@ const reducer = ( state = initialState, action) => {
                 ...state,
             };
         }
+        case REMOVE_POST_OF_ME:{
+            return{
+                ...state,
+                me: {
+                    ...state.me,
+                    Posts: state.me.Posts.filter(v=>v.id !== action.data),
+                },
+            }
+        }
         case LOAD_FOLLOWERS_REQUEST: {
             return{
                 ...state,
+                hasMoreFollower: action.offset ? state.hasMoreFollower : true, // action.offset 은 더보기 버튼 처음 클릭 시 생김(더보기 버튼 보여줌)
             };
         }
         case LOAD_FOLLOWERS_SUCCESS: {
             return{
                 ...state,
-                
+                followerList : state.followerList.concat(action.data), // 기존데이터에 계속 리스트를 추가시킴(더보기 기능)
+                hasMoreFollower: action.data.length ===3, // 가져온 데이터가 3개면 더보기 버튼을 계속 보여줌(1,2개면 없어짐)
             };
         }
         case LOAD_FOLLOWERS_FAILURE: {
             return{
                 ...state,
-                followerList : action.data,
             };
         }
         case LOAD_FOLLOWINGS_REQUEST: {
             return{
                 ...state,
+                hasMoreFollowing: action.offset ? state.hasMoreFollowing : true,
             };
         }
         case LOAD_FOLLOWINGS_SUCCESS: {
             return{
                 ...state,
-                followerList : action.data,
+                followingList : state.followingList.concat(action.data),
+                hasMoreFollowing: action.data.length ===3,
             };
         }
         case LOAD_FOLLOWINGS_FAILURE: {
