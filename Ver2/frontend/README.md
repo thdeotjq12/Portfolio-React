@@ -17,5 +17,6 @@ eslint : 팀단위 협업을 하기위한 라이브러리, 코딩스타일 규�
 
 "eslint-config-airbnb" : eslint 의 엄격한 스타일관리자 -> extends 부분에서 recommended 를 "airbnb" 로 대체 
 "eslint-plugin-jsx-a11y" : 장애인 위한 웹 접근성 교정 (airbnb 와 같이 사용)
+"immer" : 가독성 개선, 불변성 유지(코드정리) reducer, setState 등
 ## Version
 Node : 13.13.0

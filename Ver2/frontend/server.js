@@ -31,6 +31,10 @@ app.prepare().then( ()=> {
             secure: false,
         },
     }));
+    // 동적 페이지들
+    server.get('/post/:id', (req, res)=>{
+        return app.render(req, res, '/post',{tag: req.params.id});
+    });
     server.get('/hashtag/:tag', (req, res)=>{
         return app.render(req, res, '/hashtag',{tag: req.params.tag}); // next의 render 기능으로 라우팅함
     });
