@@ -1,6 +1,5 @@
 // root , 모든 페이지의 레이아웃 역할
 import React from "react";
-import Head from "next/head";
 import AppLayout from "../components/AppLayout";
 import PropTypes from "prop-types";
 import reducer from "../reducers"; 
@@ -12,26 +11,49 @@ import { createStore, applyMiddleware, compose} from 'redux';
 import rootSaga from "../sagas";
 import { LOAD_USER_REQUEST } from "../reducers/user";
 import axios from "axios";
-
+import Helmet from 'react-helmet';
+import { Container } from 'next/app'; // _document.js 에서 renderpage 랜더링 할 수 있게 해줌 (검색엔진에서 head 부분 노출시켜줌)
 const Portfolio = ({ Component, store, pageProps }) => {
   return (
     // Provider 가 최상위 컴포넌트이기 때문에 자식 컴포넌트들이 스토어에 접근할 수 있음
     // 스토어는 state, action, reducer 가 합쳐진 것
-   <Provider store={store}>
-      <Head>
-        <title>PortFolio</title>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.11/antd.css"
-        ></link>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.11/antd.js"></script>
-        <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
-      </Head>
-      <AppLayout>
-        <Component {...pageProps}></Component>
-      </AppLayout>
-   </Provider>
+    <Container>
+     <Provider store={store}>
+      <Helmet
+        title="DSS PortFolio"
+        htmlAttributes={{ lang: 'ko'}}
+        meta={[{
+          charSet:'UTF-8',
+        },{
+          name:'viewport', 
+          content: 'width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=yes,viewport-fit=cover',
+        }, {
+          'http-equiv': 'X-UA-Compatible', content: 'IE=edge',
+        }, {
+          name: 'description', content: 'DSS PortFolio',
+        }, {
+          name: 'og:title', content: 'NodeBird',
+        }, {
+          name: 'og:description', content: 'DSS PortFolio',
+        }, {
+          property: 'og:type', content: 'website',
+        }]}
+        link={[{
+          rel: 'shortcut icon', href: '/favicon.ico',
+        }, {
+          rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.11/antd.css',
+        }, {
+          rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css',
+        }, {
+          rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css',
+        }]}
+      >
+      </Helmet>
+        <AppLayout>
+          <Component {...pageProps}></Component>
+        </AppLayout>
+    </Provider>
+   </Container>
   );
 };
 
@@ -65,7 +87,7 @@ Portfolio.getInitialProps = async (context) =>{
 const configureStore = (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
   const middlewares = [sagaMiddleware , (store)=>(next)=>(action)=>{ //리덕스 사가 에러 찾는법 - 커스텀 미들웨어
-    console.log(action);
+    // console.log(action);
     next(action);
   }];
   // 보안상 아래 부분은 실 배포용인지 개발용인지 구분

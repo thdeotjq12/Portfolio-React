@@ -289,9 +289,7 @@ function* watchRemovePost(){
 }
 //
 function loadPostAPI(postId){
-    return axios.get(`/post/${postId}`, {
-        withCredentials: true,
-    })
+    return axios.get(`/post/${postId}`);
 }
 function* loadPost(action){
     try{
