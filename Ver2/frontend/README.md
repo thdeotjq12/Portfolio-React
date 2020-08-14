@@ -7,6 +7,7 @@ prop-types : 부모컴포넌트로 부터 받아온 props 의 유효성 검사
 next-redux-wrapper : 메인 레이아웃(_app.js) 에서 스토어를 받을 수 있게 해줌
 next-redux-saga : SSR을 하기위함. 프론트에서의 서버사이드랜더링 처리
 react-helmet : 검색엔진의 규격을 맞춤 (head 태그의 meta,title,script,style 을 관리)
+styled-components : 코드정리(인라인 스타일의 코드를)
 ## Dev
 
 nodemon :

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { LOAD_HASHTAG_POSTS_REQUEST } from '../reducers/post';
@@ -14,7 +14,7 @@ const Hashtag = ({tag}) => {
           if(hasMorePost){ // 더 불러올 게시글이 있을때 요청(스크롤 할때마다 요청하는 것을 방지)
             dispatch({
               type: LOAD_HASHTAG_POSTS_REQUEST,
-              lastId: mainPosts[mainPosts.length -1].id, // 마지막게시글 기준으로 다음게시글 불러옴(게시글 보고있는데 새 게시글이 추가되면, 밀려서 불러오게되서 마지막 게시글을 기준으로 계산해서 불러오기) 
+              lastId: mainPosts.length > 0 && mainPosts[mainPosts.length -1].id, // 마지막게시글 기준으로 다음게시글 불러옴(게시글 보고있는데 새 게시글이 추가되면, 밀려서 불러오게되서 마지막 게시글을 기준으로 계산해서 불러오기) 
               data: tag,
             })
           }

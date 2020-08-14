@@ -21,7 +21,7 @@ const Home = () => {
             type: LOAD_MAIN_POSTS_REQUEST,
             lastId,
           });
-          countRef.current.push(lastId4); // 요청보낼때마다 countRef 에 lastId가 담겨진다
+          countRef.current.push(lastId); // 요청보낼때마다 countRef 에 lastId가 담겨진다
         }
         
       }

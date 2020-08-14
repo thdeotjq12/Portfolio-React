@@ -86,7 +86,7 @@ function* watchloadMainPosts(){
 //
 
 function loadHashtagPostsAPI(tag, lastId){
-    return axios.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}`); //주소에 한글이 들어가면 에러가 날 수 있음
+    return axios.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}&limit=10`); //주소에 한글이 들어가면 에러가 날 수 있음
 }
 // function loadHashtagPostsAPI(data) {
 //     console.log("COME", encodeURIComponent(data));

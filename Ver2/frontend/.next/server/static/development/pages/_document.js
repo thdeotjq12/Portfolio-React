@@ -1070,6 +1070,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_document__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_document__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_helmet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-helmet */ "react-helmet");
 /* harmony import */ var react_helmet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_helmet__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! styled-components */ "styled-components");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_4__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -1088,13 +1090,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+ // styled-component SSR
 
 class MyDocument extends next_document__WEBPACK_IMPORTED_MODULE_2___default.a {
   static getInitialProps(context) {
-    const page = context.renderPage(App => props => __jsx(App, props)); // 이걸 해줘야 검색엔진에서 다큐맨터리는 랜더링 되는데 안에있는 _app.js 가 랜더링 됨
+    const sheet = new styled_components__WEBPACK_IMPORTED_MODULE_4__["ServerStyleSheet"](); // 이걸 해줘야 검색엔진에서 다큐맨터리는 랜더링 되는데 안에있는 _app.js 가 랜더링 됨
 
+    const page = context.renderPage(App => props => sheet.collectStyles(__jsx(App, props)));
+    const styleTags = sheet.getStyleElement();
     return _objectSpread({}, page, {
-      helmet: react_helmet__WEBPACK_IMPORTED_MODULE_3__["Helmet"].renderStatic()
+      helmet: react_helmet__WEBPACK_IMPORTED_MODULE_3__["Helmet"].renderStatic(),
+      styleTags
     }); // SSR
   }
 
@@ -1109,13 +1115,14 @@ class MyDocument extends next_document__WEBPACK_IMPORTED_MODULE_2___default.a {
 
     const htmlAttrs = htmlAttributes.toComponent();
     const bodyAttrs = bodyAttributes.toComponent();
-    return __jsx("html", htmlAttrs, __jsx("head", null, Object.values(helmet).map(el => el.toComponent())), __jsx("body", bodyAttrs, __jsx(next_document__WEBPACK_IMPORTED_MODULE_2__["Main"], null), __jsx(next_document__WEBPACK_IMPORTED_MODULE_2__["NextScript"], null)));
+    return __jsx("html", htmlAttrs, __jsx("head", null, this.props.styleTags, Object.values(helmet).map(el => el.toComponent())), __jsx("body", bodyAttrs, __jsx(next_document__WEBPACK_IMPORTED_MODULE_2__["Main"], null), __jsx(next_document__WEBPACK_IMPORTED_MODULE_2__["NextScript"], null)));
   }
 
 }
 
 MyDocument.propTypes = {
-  helmet: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object.isRequired
+  helmet: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object.isRequired,
+  styleTags: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object.isRequired
 };
 /* harmony default export */ __webpack_exports__["default"] = (MyDocument);
 
@@ -1163,6 +1170,17 @@ module.exports = require("react");
 /***/ (function(module, exports) {
 
 module.exports = require("react-helmet");
+
+/***/ }),
+
+/***/ "styled-components":
+/*!************************************!*\
+  !*** external "styled-components" ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("styled-components");
 
 /***/ }),
 

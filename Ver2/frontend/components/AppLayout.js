@@ -4,12 +4,17 @@ import { Menu, Input, Row, Col, List } from "antd";
 import LoginForm from "../components/LoginForm";
 import PropTypes from "prop-types";
 import UserProfile from "./UserProfile";
+import Router from 'next/router';
 import { useSelector, useDispatch } from "react-redux";
 import { LOAD_USER_REQUEST } from "../reducers/user";
 
+
 const AppLayout = ({ children }) => {
   const { me } = useSelector(state => state.user);
-
+  // 프로그래밍적으로 페이지 변경, 컴포넌트적으로는 Link
+  const onSearch = (value) =>{
+   Router.push({pathname: '/hashtag', query: {tag: value}}, `/hashtag/${value}`);
+  }
   return (
     <div>
       <Menu mode="horizontal">
@@ -27,6 +32,7 @@ const AppLayout = ({ children }) => {
           <Input.Search
             enterButton
             style={{ verticalAlign: "middle" }}
+            onSearch={onSearch}
           ></Input.Search>
         </Menu.Item>
       </Menu>

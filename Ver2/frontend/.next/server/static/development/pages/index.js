@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -110,11 +110,73 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(antd__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_slick__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-slick */ "react-slick");
 /* harmony import */ var react_slick__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_slick__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! styled-components */ "styled-components");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_4__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
 
+
+const Overlay = styled_components__WEBPACK_IMPORTED_MODULE_4___default.a.div`
+  position: fixed;
+  z-index: 5000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`; // header 안에들어있는 h1이란 의미, &은 사스나 레스 에서 자기자신 가르키는 태그(여기선 h1은 자식), 
+
+const Header = styled_components__WEBPACK_IMPORTED_MODULE_4___default.a.header`
+  height: 44;
+  background: white;
+  position: relative;
+  padding: 0;
+  text-align: center;  
+
+  & h1{
+    margin: 0;
+    fontSize: 17px;
+    color: #333;
+    line-height: 44px;
+  }
+`;
+const SlickWrapper = styled_components__WEBPACK_IMPORTED_MODULE_4___default.a.div`
+  height: calc(100% - 44px);
+  background: #090909;
+`; // 스타일 이미 적용되있는 앤티디 컴포넌트도 스타일 적용 가능
+
+const CloseBtn = styled_components__WEBPACK_IMPORTED_MODULE_4___default()(antd__WEBPACK_IMPORTED_MODULE_2__["Icon"])` 
+ position: absolute;
+ right: 0;
+ top: 0;
+ padding: 15;
+ line-height: 14px;
+ cursor: pointer;
+`; // div 스타일을 자식으로 넣은 경우
+
+const Indicator = styled_components__WEBPACK_IMPORTED_MODULE_4___default.a.div`
+  text-align: center;
+  & > div {
+    width: 75;
+    height: 30;
+    line-height: 30px;
+    borderRadius: 15;
+    background: #313131;
+    display: inline-block;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+  }
+`;
+const ImgWrapper = styled_components__WEBPACK_IMPORTED_MODULE_4___default.a.div`
+padding: 32px;
+text-align: center;
+& img{
+  margin: 0 auto; 
+  max-height: 750px;
+}
+`;
 
 const ImagesZoom = ({
   images,
@@ -125,47 +187,7 @@ const ImagesZoom = ({
     1: setCurrentSlide
   } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0); // 몇번째 이미지를 보고있는지
 
-  return __jsx("div", {
-    style: {
-      position: 'fixed',
-      zIndex: 5000,
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0
-    }
-  }, __jsx("header", {
-    style: {
-      height: 44,
-      background: 'white',
-      position: 'relative',
-      padding: 0,
-      textAlign: 'center'
-    }
-  }, __jsx("h1", {
-    style: {
-      margin: 0,
-      fontSize: '17px',
-      color: '#333',
-      lineHeight: '44px'
-    }
-  }, "\uC0C1\uC138 \uC774\uBBF8\uC9C0"), __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Icon"], {
-    type: "close",
-    onClick: onClose,
-    style: {
-      position: 'absolute',
-      right: 0,
-      top: 0,
-      padding: 15,
-      lineHeight: '14px',
-      cursor: 'pointer'
-    }
-  })), __jsx("div", {
-    style: {
-      height: 'calc(100% - 44px)',
-      background: '#090909'
-    }
-  }, __jsx("div", null, __jsx(react_slick__WEBPACK_IMPORTED_MODULE_3___default.a, {
+  return __jsx(Overlay, null, __jsx(Header, null, __jsx("h1", null, "\uC0C1\uC138 \uC774\uBBF8\uC9C0"), __jsx(CloseBtn, null)), __jsx(SlickWrapper, null, __jsx("div", null, __jsx(react_slick__WEBPACK_IMPORTED_MODULE_3___default.a, {
     initialSlide: 0 // 처음 보여줄 이미지 
     ,
     afterChange: slide => setCurrentSlide(slide) // 슬라이드 할때마다 index 변경
@@ -178,35 +200,10 @@ const ImagesZoom = ({
     slidesToScroll: 1 // 한번에 1장만 슬라이드
 
   }, images.map(v => {
-    return __jsx("div", {
-      style: {
-        padding: 32,
-        textAlign: 'center'
-      }
-    }, __jsx("img", {
-      src: `http://localhost:3065/${v.src}`,
-      style: {
-        margin: '0 auto',
-        maxHeight: 750
-      }
+    return __jsx(ImgWrapper, null, __jsx("img", {
+      src: `http://localhost:3065/${v.src}`
     }));
-  })), __jsx("div", {
-    style: {
-      textAlign: 'center'
-    }
-  }, __jsx("div", {
-    style: {
-      width: 75,
-      height: 30,
-      lineHeight: '30px',
-      borderRadius: 15,
-      background: '#313131',
-      display: 'inline-block',
-      textAlign: 'center',
-      color: 'white',
-      fontSize: '15px'
-    }
-  }, currentSlide + 1, " / ", images.length)))));
+  })), __jsx(Indicator, null, __jsx("div", null, currentSlide + 1, " / ", images.length)))));
 };
 
 ImagesZoom.propTypes = {
@@ -242,6 +239,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! styled-components */ "styled-components");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_9__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
@@ -252,6 +251,10 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
+
+const CardWrapper = styled_components__WEBPACK_IMPORTED_MODULE_9___default.a.div`
+  margin-bottom: 20px;
+`;
 
 const PostCard = ({
   post
@@ -354,7 +357,7 @@ const PostCard = ({
       data: userId
     });
   });
-  return __jsx("div", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
+  return __jsx(CardWrapper, null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
     key: +post.createdAt,
     cover: post.Images[0] && __jsx(_PostImages__WEBPACK_IMPORTED_MODULE_5__["default"], {
       images: post.Images
@@ -5152,7 +5155,7 @@ const Home = () => {
             type: _reducers_post__WEBPACK_IMPORTED_MODULE_4__["LOAD_MAIN_POSTS_REQUEST"],
             lastId
           });
-          countRef.current.push(lastId4); // 요청보낼때마다 countRef 에 lastId가 담겨진다
+          countRef.current.push(lastId); // 요청보낼때마다 countRef 에 lastId가 담겨진다
         }
       }
     }
@@ -5432,7 +5435,7 @@ const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
       case LOAD_HASHTAG_POSTS_REQUEST:
       case LOAD_USER_POSTS_REQUEST:
         {
-          draft.mainPosts = action.lastId === 0 ? [] : draft.mainPosts;
+          draft.mainPosts = !action.lastId ? [] : draft.mainPosts;
           draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
           break; // return {
           //     ...state,
@@ -5944,7 +5947,7 @@ const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 /***/ }),
 
-/***/ 3:
+/***/ 4:
 /*!******************************!*\
   !*** multi ./pages/index.js ***!
   \******************************/
@@ -6030,6 +6033,17 @@ module.exports = require("react-redux");
 /***/ (function(module, exports) {
 
 module.exports = require("react-slick");
+
+/***/ }),
+
+/***/ "styled-components":
+/*!************************************!*\
+  !*** external "styled-components" ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("styled-components");
 
 /***/ }),
 

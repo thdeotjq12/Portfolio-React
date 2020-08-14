@@ -112,10 +112,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! prop-types */ "prop-types");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _UserProfile__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./UserProfile */ "./components/UserProfile.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-redux */ "react-redux");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-redux */ "react-redux");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
 
 
 
@@ -130,7 +133,17 @@ const AppLayout = ({
 }) => {
   const {
     me
-  } = Object(react_redux__WEBPACK_IMPORTED_MODULE_6__["useSelector"])(state => state.user);
+  } = Object(react_redux__WEBPACK_IMPORTED_MODULE_7__["useSelector"])(state => state.user); // 프로그래밍적으로 페이지 변경, 컴포넌트적으로는 Link
+
+  const onSearch = value => {
+    next_router__WEBPACK_IMPORTED_MODULE_6___default.a.push({
+      pathname: '/hashtag',
+      query: {
+        tag: value
+      }
+    }, `/hashtag/${value}`);
+  };
+
   return __jsx("div", null, __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Menu"], {
     mode: "horizontal"
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Menu"].Item, {
@@ -147,7 +160,8 @@ const AppLayout = ({
     enterButton: true,
     style: {
       verticalAlign: "middle"
-    }
+    },
+    onSearch: onSearch
   }))), __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Row"], {
     gutter: 8
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Col"], {
@@ -5445,7 +5459,7 @@ const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
       case LOAD_HASHTAG_POSTS_REQUEST:
       case LOAD_USER_POSTS_REQUEST:
         {
-          draft.mainPosts = action.lastId === 0 ? [] : draft.mainPosts;
+          draft.mainPosts = !action.lastId ? [] : draft.mainPosts;
           draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
           break; // return {
           //     ...state,
@@ -6097,7 +6111,7 @@ function* watchloadMainPosts() {
 
 
 function loadHashtagPostsAPI(tag, lastId) {
-  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}`); //주소에 한글이 들어가면 에러가 날 수 있음
+  return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}&limit=10`); //주소에 한글이 들어가면 에러가 날 수 있음
 } // function loadHashtagPostsAPI(data) {
 //     console.log("COME", encodeURIComponent(data));
 //     return axios.get(`/hashtag/${encodeURIComponent(data)}`);
