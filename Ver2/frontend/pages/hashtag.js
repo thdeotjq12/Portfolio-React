@@ -29,7 +29,7 @@ const Hashtag = ({tag}) => {
     return(
         <div>
             {mainPosts ? mainPosts.map(c => (
-                <PostCard key={+c.createdAt} post={c}></PostCard> 
+                <PostCard key={c.id} post={c}></PostCard> 
             )): null} 
         </div>// 강의에서는(6.3 18:49) ? 처리 안해줘도 됨, 나는 map undefined 에러, 왜 ?
     );

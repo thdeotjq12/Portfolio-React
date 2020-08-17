@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -358,7 +358,6 @@ const PostCard = ({
     });
   });
   return __jsx(CardWrapper, null, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
-    key: +post.createdAt,
     cover: post.Images[0] && __jsx(_PostImages__WEBPACK_IMPORTED_MODULE_5__["default"], {
       images: post.Images
     }),
@@ -462,7 +461,7 @@ PostCard.propTypes = {
     User: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object,
     content: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
     img: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
-    createdAt: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object
+    createdAt: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string
   }).isRequired
 };
 /* harmony default export */ __webpack_exports__["default"] = (PostCard);
@@ -5169,7 +5168,7 @@ const Home = () => {
   }, [mainPosts.length]);
   return __jsx("div", null, me && __jsx(_components_PostForm__WEBPACK_IMPORTED_MODULE_1__["default"], null), mainPosts.map(c => {
     return __jsx(_components_PostCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      key: c,
+      key: c.id,
       post: c
     });
   }));
@@ -5838,10 +5837,10 @@ const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
       case LOAD_FOLLOWERS_REQUEST:
         {
-          return _objectSpread({}, state, {
-            hasMoreFollower: action.offset ? state.hasMoreFollower : true // action.offset 은 더보기 버튼 처음 클릭 시 생김(더보기 버튼 보여줌)
-
-          });
+          // action.offset 은 더보기 버튼 처음 클릭 시 생김(더보기 버튼 보여줌)
+          draft.followerList = !action.offset ? [] : draft.followerList;
+          draft.hasMoreFollower = action.offset ? draft.hasMoreFollower : true;
+          break;
         }
 
       case LOAD_FOLLOWERS_SUCCESS:
@@ -5861,9 +5860,9 @@ const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
       case LOAD_FOLLOWINGS_REQUEST:
         {
-          return _objectSpread({}, state, {
-            hasMoreFollowing: action.offset ? state.hasMoreFollowing : true
-          });
+          draft.followingList = !action.offset ? [] : draft.followingList;
+          draft.hasMoreFollowing = action.offset ? draft.hasMoreFollowing : true;
+          break;
         }
 
       case LOAD_FOLLOWINGS_SUCCESS:
@@ -5947,7 +5946,7 @@ const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 /***/ }),
 
-/***/ 4:
+/***/ 3:
 /*!******************************!*\
   !*** multi ./pages/index.js ***!
   \******************************/

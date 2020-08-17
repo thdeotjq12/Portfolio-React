@@ -12,7 +12,7 @@ import rootSaga from "../sagas";
 import { LOAD_USER_REQUEST } from "../reducers/user";
 import axios from "axios";
 import Helmet from 'react-helmet';
-import { Container } from 'next/app'; // _document.js 에서 renderpage 랜더링 할 수 있게 해줌 (검색엔진에서 head 부분 노출시켜줌)
+import App, { Container } from 'next/app'; // _document.js 에서 renderpage 랜더링 할 수 있게 해줌 (검색엔진에서 head 부분 노출시켜줌)
 const Portfolio = ({ Component, store, pageProps }) => {
   return (
     // Provider 가 최상위 컴포넌트이기 때문에 자식 컴포넌트들이 스토어에 접근할 수 있음
@@ -79,7 +79,7 @@ Portfolio.getInitialProps = async (context) =>{
     })
   }
   if(Component.getInitialProps){
-    pageProps = await Component.getInitialProps(ctx);  // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)
+    pageProps = await Component.getInitialProps(ctx) || {};  // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)
   }
   return { pageProps };
 };

@@ -153,7 +153,8 @@ const AppLayout = ({
   }, __jsx("a", null, "\uB178\uB4DC\uBC84\uB4DC"))), __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Menu"].Item, {
     key: "profile"
   }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
-    href: "/profile"
+    href: "/profile",
+    prefetch: true
   }, __jsx("a", null, "\uD504\uB85C\uD544"))), __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Menu"].Item, {
     key: "mail"
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_2__["Input"].Search, {
@@ -281,8 +282,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(antd__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "react-redux");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _reducers_user__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../reducers/user */ "./reducers/user.js");
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
 
 
 
@@ -296,17 +300,23 @@ const UserProfile = () => {
 
   const onLogout = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(() => {
     dispatch({
-      type: _reducers_user__WEBPACK_IMPORTED_MODULE_3__["LOG_OUT_REQUEST"]
+      type: _reducers_user__WEBPACK_IMPORTED_MODULE_4__["LOG_OUT_REQUEST"]
     });
   }, []);
   return __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"], {
-    actions: [__jsx("div", {
-      key: "twit"
-    }, "\uC9F9\uC9F9", __jsx("br", null), me.Posts ? me.Posts.length : 0), __jsx("div", {
-      key: "following"
-    }, "\uD314\uB85C\uC789", __jsx("br", null), me.Followings ? me.Followings.length : 0), __jsx("div", {
-      key: "follower"
-    }, "\uD314\uB85C\uC6CC", __jsx("br", null), me.Followers ? me.Followers.length : 0)]
+    actions: [__jsx(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
+      href: "/profile",
+      key: "twit",
+      prefetch: true
+    }, __jsx("a", null, __jsx("div", null, "\uC9F9\uC9F9", __jsx("br", null), me.Posts ? me.Posts.length : 0))), __jsx(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
+      href: "/profile",
+      key: "following",
+      prefetch: true
+    }, __jsx("a", null, __jsx("div", null, "\uD314\uB85C\uC789", __jsx("br", null), me.Followings ? me.Followings.length : 0))), __jsx(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
+      href: "/profile",
+      key: "follower",
+      prefetch: true
+    }, __jsx("a", null, __jsx("div", null, "\uD314\uB85C\uC6CC", __jsx("br", null), me.Followers ? me.Followers.length : 0)))]
   }, __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Card"].Meta, {
     avatar: __jsx(antd__WEBPACK_IMPORTED_MODULE_1__["Avatar"], null, me.nickname[0]),
     title: me.nickname
@@ -4967,7 +4977,7 @@ Portfolio.getInitialProps = async context => {
   }
 
   if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx); // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)
+    pageProps = (await Component.getInitialProps(ctx)) || {}; // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)
   }
 
   return {
@@ -5862,10 +5872,10 @@ const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
       case LOAD_FOLLOWERS_REQUEST:
         {
-          return _objectSpread({}, state, {
-            hasMoreFollower: action.offset ? state.hasMoreFollower : true // action.offset 은 더보기 버튼 처음 클릭 시 생김(더보기 버튼 보여줌)
-
-          });
+          // action.offset 은 더보기 버튼 처음 클릭 시 생김(더보기 버튼 보여줌)
+          draft.followerList = !action.offset ? [] : draft.followerList;
+          draft.hasMoreFollower = action.offset ? draft.hasMoreFollower : true;
+          break;
         }
 
       case LOAD_FOLLOWERS_SUCCESS:
@@ -5885,9 +5895,9 @@ const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
       case LOAD_FOLLOWINGS_REQUEST:
         {
-          return _objectSpread({}, state, {
-            hasMoreFollowing: action.offset ? state.hasMoreFollowing : true
-          });
+          draft.followingList = !action.offset ? [] : draft.followingList;
+          draft.hasMoreFollowing = action.offset ? draft.hasMoreFollowing : true;
+          break;
         }
 
       case LOAD_FOLLOWINGS_SUCCESS:

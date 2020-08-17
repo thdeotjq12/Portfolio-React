@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const expresSession = require('express-session');
-
+const path = require('path');
 
 // -- next 부분
 const dev = process.env.NODE_ENV !== 'production'; // 개발모드
@@ -19,6 +19,7 @@ app.prepare().then( ()=> {
     const server = express();
 
     server.use(morgan('dev'));
+    server.use('/', express.static(path.join(__dirname, 'public'))); // 프론트주소, 서버주소 - 파비콘
     server.use(express.json());
     server.use(express.urlencoded({extended : true}));
     server.use(cookieParser(process.env.COOKIE_SECRET));
