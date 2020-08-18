@@ -6,9 +6,11 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@zeit/next-bundle-analyzer": "^0.1.2",
     "antd": "^3.26.11",
     "axios": "^0.19.2",
     "cookie-parser": "^1.4.5",
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
@@ -29,8 +31,9 @@
   },
   "scripts": {
     "dev": "nodemon",
-    "build": "next build",
-    "start": "next start"
+    "build": "cross-env ANALYZE=true next build",
+    "prestart": "npm run build",
+    "start": "cross-env NODE_ENV=production PORT=80 pm2 start server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
