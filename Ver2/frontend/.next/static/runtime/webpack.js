@@ -113,7 +113,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "ec04d6abd91839224fb3";
+/******/ 	var hotCurrentHash = "5a60fd45d0b3bc58d171";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -767,7 +767,7 @@
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "static/chunks/" + ({}[chunkId]||chunkId) + ".js"
+/******/ 		return __webpack_require__.p + "static/chunks/" + ({"antd-icons":"antd-icons"}[chunkId]||chunkId) + ".js"
 /******/ 	}
 /******/
 /******/ 	// The require function
@@ -936,4 +936,3 @@
 /******/ })
 /************************************************************************/
 /******/ ([]);
-//# sourceMappingURL=webpack.js.map

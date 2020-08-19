@@ -8,8 +8,10 @@ next-redux-wrapper : 메인 레이아웃(_app.js) 에서 스토어를 받을 수
 next-redux-saga : SSR을 하기위함. 프론트에서의 서버사이드랜더링 처리
 react-helmet : 검색엔진의 규격을 맞춤 (head 태그의 meta,title,script,style 을 관리)
 styled-components : 코드정리(인라인 스타일의 코드를)
-next-bundle-analyzer : next의 최적화(next.config.js)를 위한 서비스 분석(프론트, 프론트 서버 패키지 분석해줌)
 cross-env : 윈도 환경에서 환경변수를 npm 명령어에 넣어주기(윈도우 환경에서)(맥or리눅스는 기본 지원)
+webpack-ant-icon-loader : 엔티디 아이콘 트리셰이킹
+next/bundle-analyzer : next의 최적화(next.config.js)를 위한 서비스 분석(프론트, 프론트 서버 패키지 분석해줌)
+compression-webpack-plugin : 빌드 용량을 줄여줌
 ## Dev
 
 nodemon :

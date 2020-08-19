@@ -12,10 +12,11 @@ module.exports = withBundleAnalyzer({
         const prod =  process.env.NODE_ENV === 'production';
         const plugins = [
             ...config.plugins,
-            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/),
+            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/), // 모멘트 트리셰이킹(모멘트 깃헙에 있음)
         ];
         if (prod) {
-            plugins.push(new CompressionPlugin()); // main.js.gz
+            // 배포일때만
+            plugins.push(new CompressionPlugin()); // main.js.gz , 빌드 시 용량을 줄여줌(.gz 로 압축)
         }
         return {
             ...config, // 기존설정 먼저 적용 후 덮어씌워야함, 어떤 서비스를 하는지 분석해야 변경점을 찾을 수있음 -> next-bundle-analyzer
@@ -30,7 +31,7 @@ module.exports = withBundleAnalyzer({
                     loader: 'webpack-ant-icon-loader',
                     enforce: 'pre',
                     include: [
-                      require.resolve('@ant-design/icons/lib/dist'),
+                      require.resolve('@ant-design/icons/lib/dist'), //엔티디 아이콘 트리셰이킹
                     ],
                   },
                 ],

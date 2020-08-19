@@ -101,16 +101,8 @@ module.exports =
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-
-    
-
-    /* harmony default export */ __webpack_exports__["default"] = (function (ctx) {
-      return Promise.all([])
-    });
-  
+eval("__webpack_require__.r(__webpack_exports__);\n\n    \n\n    /* harmony default export */ __webpack_exports__[\"default\"] = (function (ctx) {\n      return Promise.all([])\n    });\n  \n\n//# sourceURL=webpack:///./node_modules/next/dist/build/webpack/loaders/next-plugin-loader.js?");
 
 /***/ })
 
 /******/ });
-//# sourceMappingURL=init-server.js.map
