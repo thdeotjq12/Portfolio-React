@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import PostCard from '../components/PostCard';
+import PostCard from '../containers/PostCard';
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import { Card, Avatar } from 'antd';
 import { LOAD_USER_REQUEST } from '../reducers/user';

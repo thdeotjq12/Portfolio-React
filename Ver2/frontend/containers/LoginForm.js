@@ -4,10 +4,15 @@ import { Input, Button, Form } from "antd";
 import { useDispatch, useSelector} from 'react-redux';
 import { userInput } from "../pages/signup"; // 커스텀 훅 재사용
 import { loginRequestAction, LOG_IN_REQUEST } from "../reducers/user";
+import styled from 'styled-components';
+
+const LoginError = styled.div`
+  color: red;
+`;
 const LoginForm = () => {
   const [id, onChangeId] = userInput("");
   const [password, onChangePassword] = userInput("");
-  const { isLoggingIn} = useSelector(state => state.user)
+  const { isLoggingIn, logInErrorReason} = useSelector(state => state.user)
   const dispatch = useDispatch();
   const onSubmitForm = useCallback(e => {
       e.preventDefault();
@@ -37,6 +42,7 @@ const LoginForm = () => {
           required
         ></Input>
       </div>
+      <LoginError>{logInErrorReason}</LoginError>
       <div style={{ marginTop:'10px'}}>
         <Button type="primary" htmlType="submit" loading={isLoggingIn}>
           로그인

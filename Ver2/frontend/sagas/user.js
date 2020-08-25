@@ -26,9 +26,11 @@ function* logIn(action){
             data: result.data,
         }); // (4)put은 dispatch와 동일, call이 성공하면 LOG_IN_SUCCESS 실행
     }catch(e){
-        console.error(e);
+        // console.error(e);
+        // console.dir(e);
         yield put({
-            type:LOG_IN_FAILURE
+            type:LOG_IN_FAILURE,
+            reason: e.response && e.response.data,
         })
     }
 }

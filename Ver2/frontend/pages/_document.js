@@ -26,6 +26,8 @@ class MyDocument extends Document {
                 </head>
                 <body {...bodyAttrs}>
                     <Main></Main>
+                    {process.env.NODE_ENV === 'production' // 익스플로러(옛 브라우저) 최신코드 호환 가능, 서비스 속도 느려질 수 있음
+                    && <script src="https://polyfill.io/v3/polyfill.min.js?features=es6,es7,es8,es9,NodeList.prototype.forEach&flags=gated" />}
                     <NextScript></NextScript>
                 </body>
             </html>

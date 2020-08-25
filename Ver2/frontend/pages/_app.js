@@ -37,6 +37,8 @@ const Portfolio = ({ Component, store, pageProps }) => {
           name: 'og:description', content: 'DSS PortFolio',
         }, {
           property: 'og:type', content: 'website',
+        }, {
+          property:'og:image', content: 'http://localhost:3060/favicon.ico',
         }]}
         link={[{
           rel: 'shortcut icon', href: '/favicon.ico',

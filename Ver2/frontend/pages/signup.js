@@ -3,6 +3,11 @@ import { Form, Input, Checkbox, Button } from "antd";
 import { SIGN_UP_REQUEST , isSigningUp } from "../reducers/user";
 import { useDispatch, useSelector } from "react-redux";
 import Router from 'next/router';
+import styled from 'styled-components';
+
+const SignupError = styled.div`
+  color: red;
+`;
 // Coustom hook 훅에 기능을 추가해서 새로 만듬 ( 중복방지 등 )
 // useState(hook) 는 커스텀 훅 제외한 곳에서 사용하지 않기
 export const userInput = (initValue = null) => {
@@ -129,7 +134,7 @@ const Signup = () => {
             onChange={onChangePasswordChk}
           ></Input>
           {passwrodError && (
-            <div style={{ color: "red" }}> 비밀번호가 일치하지 않습니다.</div>
+            <SignupError> 비밀번호가 일치하지 않습니다.</SignupError>
           )}
         </div>
         <div>
@@ -137,7 +142,7 @@ const Signup = () => {
             동의합니다.
           </Checkbox>
           {termError && (
-            <div style={{ color: "red" }}> 약관에 동의 해주세요.</div>
+            <SignupError> 약관에 동의 해주세요.</SignupError>
           )}
         </div>
         <div>
