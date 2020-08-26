@@ -48,4 +48,29 @@ app.prepare().then( ()=> {
     server.listen(3060, ()=>{
         console.log('next+express running on port 3060');
     })
-})
+
+    if (prod) {
+        const lex = require('greenlock-express').create({
+          version: 'draft-11',
+          configDir: '/etc/letsencrypt', // 또는 ~/letsencrypt/etc
+          server: 'https://acme-v02.api.letsencrypt.org/directory',
+          approveDomains: (opts, certs, cb) => {
+            if (certs) {
+              opts.domains = ['nodebird.com', 'www.nodebird.com'];
+            } else {
+              opts.email = 'zerohch0@gmail.com';
+              opts.agreeTos = true;
+            }
+            cb(null, { options: opts, certs });
+          },
+          renewWithin: 81 * 24 * 60 * 60 * 1000,
+          renewBy: 80 * 24 * 60 * 60 * 1000,
+        });
+        https.createServer(lex.httpsOptions, lex.middleware(server)).listen(443);
+        http.createServer(lex.middleware(require('redirect-https')())).listen(80);
+    } else {
+        server.listen(prod ? process.env.PORT : 3060, () => {
+          console.log(`next+express running on port ${prod ? process.env.PORT : 3060}`);
+        });
+    }
+});
