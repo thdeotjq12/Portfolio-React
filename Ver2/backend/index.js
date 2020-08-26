@@ -28,7 +28,7 @@ if (prod) {
     app.use(helmet());
     app.use(morgan('combined'));
     app.use(cors({
-      origin: 'https://nodebird.com',
+      origin: 'http://13.124.190.63/',
       credentials: true,
     }));
 } else {
@@ -57,7 +57,7 @@ app.use(expressSession({
     cookie:{
         httpOnly: true, // 자바스크립트로 http 에 접근하는 쿠키접근 방지
         secure : prod, // https 를 사용할때 true
-        domain: prod && '.nodebird.com',
+        domain: prod && 'http://13.124.190.63/',
     },
     name : 'onL' // 취약점 보호용 세션이름 변경
 }));
@@ -82,7 +82,7 @@ if (prod) {
       server: 'https://acme-v02.api.letsencrypt.org/directory',
       approveDomains: (opts, certs, cb) => {
         if (certs) {
-          opts.domains = ['api.nodebird.com'];
+          opts.domains = ['api.http://13.124.190.63/'];
         } else {
           opts.email = 'zerohch0@gmail.com';
           opts.agreeTos = true;

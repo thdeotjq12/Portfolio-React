@@ -56,7 +56,7 @@ app.prepare().then( ()=> {
           server: 'https://acme-v02.api.letsencrypt.org/directory',
           approveDomains: (opts, certs, cb) => {
             if (certs) {
-              opts.domains = ['nodebird.com', 'www.nodebird.com'];
+              opts.domains = ['http://13.124.190.63/.com', 'www.nodebird.com'];
             } else {
               opts.email = 'zerohch0@gmail.com';
               opts.agreeTos = true;
