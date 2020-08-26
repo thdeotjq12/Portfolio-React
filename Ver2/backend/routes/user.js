@@ -80,6 +80,7 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
         }
         // 로직상 에러
         if(info){
+            console.log(" 로직상 에러 ")
             return res.status(401).send(info.reason);
         }
         return req.login(user, async (loginErr)=> {

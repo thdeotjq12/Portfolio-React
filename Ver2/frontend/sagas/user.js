@@ -90,18 +90,19 @@ function* watchLogOut(){
 }
 // 로그 아웃 부분 -------------------------------------
 // 사용자정보 불러오기 부분 -------------------------------------
-function loadUserAPI(){
+function loadUserAPI(userId){
     // 세션쿠키 서버로 보냄 > 유효한 쿠키면 데이터 전달함
-    return axios.get('/user/', {
-        withCredentials : true,
-    });
+    return axios.get(userId ? `/user/${userId}` : '/user/', {
+        withCredentials: true, // 클라이언트에서 요청 보낼 때는 브라우저가 쿠키를 같이 동봉해줘요
+      }); // 서버사이드렌더링일 때는, 브라우저가 없어요.
 }
-function* loadUser(){ 
+function* loadUser(action){ 
     try{
-        const result = yield call(loadUserAPI); // 두번째는 첫번째의(함수) 인자값
+        const result = yield call(loadUserAPI, action.data); // 두번째는 첫번째의(함수) 인자값
         yield put({ 
             type:LOAD_USER_SUCCESS,
             data: result.data,
+            me: !action.data,
         });
     }catch(e){
         console.error(e);

@@ -16,6 +16,7 @@ module.exports = () => {
             }
             const result = await bcrypt.compare(password, user.password); // db, front 비밀번호 비교
             if(result){
+                console.log("성공");
                 return done(null, user); // 성공했을때 두번째 인자 사용, 첫번째는 서버에러(1)
             }
             return done(null, false, { reason:'비밀번호가 틀립니다.'});
@@ -23,5 +24,5 @@ module.exports = () => {
             console.error(e);
             return done(e);
         }
-    }))
-}
+    }));
+};

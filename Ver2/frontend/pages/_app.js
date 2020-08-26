@@ -72,13 +72,14 @@ Portfolio.getInitialProps = async (context) =>{
   const state = ctx.store.getState();// AppLayout 부분 SSR구조변경 
   // 리덕스 사가 호출순서 대로 코딩할 것.
   const cookie = ctx.isServer ? ctx.req.headers.cookie : '';// 클라이언트>서버 구조일땐 브라우저가 쿠키를 같이 넣어줬었는데(withCridentials:true),
+  axios.defaults.headers.Cookie = ''; 
   if(ctx.isServer && cookie){ // 서버일때(SSR)와 아닐때가 있기때문에 분기처리 해줌
-    axios.defaults.headers.Cookie = cookie; // SSR은 직접 쿠키를 넣어줘야함
+    axios.defaults.headers.Cookie = cookie; // SSR은 직접 쿠키를 넣어줘야함, 모든 axios 요청에 (로그인 정보가 들어있는) 쿠키가 들어감
   }
   if(!state.user.me){ // AppLayout 에서 !me 일때 디스패치 해줬던 것 - 스토어에서 me 정보를 가져오기
     ctx.store.dispatch({
       type: LOAD_USER_REQUEST,
-    })
+    });
   }
   if(Component.getInitialProps){
     pageProps = await Component.getInitialProps(ctx) || {};  // 라이프사이클: 1. server에서 라우팅, 2. page에서 getInit, 3. 여기로 전달(ctx)

@@ -49,6 +49,7 @@ User.getInitialProps = async (context) => {
         type: LOAD_USER_POSTS_REQUEST,
         data: id,
     })
-    return { id: parseInt(context.query.id, 10) } // 1. 이러면 컴포넌트의 props에도 전달이 가능함 : 서버>getInitialProps> User.props 
+    // return { id: parseInt(context.query.id, 10) } // 1. 이러면 컴포넌트의 props에도 전달이 가능함 : 서버>getInitialProps> User.props 
+    return { id };
 };
 export default User;
