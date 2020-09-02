@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const expresSession = require('express-session');
 const path = require('path');
+const https = require('https');
+const http = require('http');
 
 // -- next 부분
 const dev = process.env.NODE_ENV !== 'production'; // 개발모드
@@ -45,9 +47,6 @@ app.prepare().then( ()=> {
     server.get('*', (req, res)=>{ // * : 모든요청을 여기서 처리 
         return handle(req, res);
     })
-    server.listen(3060, ()=>{
-        console.log('next+express running on port 3060');
-    })
 
     if (prod) {
         const lex = require('greenlock-express').create({
@@ -56,9 +55,9 @@ app.prepare().then( ()=> {
           server: 'https://acme-v02.api.letsencrypt.org/directory',
           approveDomains: (opts, certs, cb) => {
             if (certs) {
-              opts.domains = ['http://13.124.190.63/.com', 'www.nodebird.com'];
+              opts.domains = ['studydss.cf', 'www.studydss.cf'];
             } else {
-              opts.email = 'zerohch0@gmail.com';
+              opts.email = 'thdeotjq1234@naver.com';
               opts.agreeTos = true;
             }
             cb(null, { options: opts, certs });
