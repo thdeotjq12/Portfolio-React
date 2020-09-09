@@ -65,10 +65,12 @@ app.prepare().then( ()=> {
           renewWithin: 81 * 24 * 60 * 60 * 1000,
           renewBy: 80 * 24 * 60 * 60 * 1000,
         });
-        https.createServer(lex.httpsOptions, lex.middleware(server)).listen(443);
-        http.createServer(lex.middleware(require('redirect-https')())).listen(80);
+        // https.createServer(lex.httpsOptions, lex.middleware(server)).listen(443);
+        // http.createServer(lex.middleware(require('redirect-https')())).listen(80);
+        server.listen(80, () => {    });
+        
     } else {
-        server.listen(prod ? process.env.PORT : 3060, () => {
+        server.listen(prod ? process.env.PORT : 80, () => {
           console.log(`next+express running on port ${prod ? process.env.PORT : 3060}`);
         });
     }
