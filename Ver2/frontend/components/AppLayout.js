@@ -24,7 +24,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="profile">
-          <Link href="/profile" prefetch>
+          <Link href="/profile" prefetch={false}>
             <a>프로필</a>
           </Link>
         </Menu.Item>
@@ -53,7 +53,7 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          3 
+          <Link href="http://13.124.180.7/" prefetch={false}><a target="_blank">Made by DSS</a></Link> 
         </Col>
       </Row>
     </div>
@@ -61,7 +61,7 @@ const AppLayout = ({ children }) => {
 };
 
 AppLayout.propTypes = {
-  children: PropTypes.node // 랜더링 될 수 있는 컴포넌트들
+  children: PropTypes.node.isRequired // 랜더링 될 수 있는 컴포넌트들
 };
 
 export default AppLayout;

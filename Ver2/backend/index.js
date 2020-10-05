@@ -28,7 +28,7 @@ if (prod) {
     app.use(helmet());
     app.use(morgan('combined'));
     app.use(cors({
-      origin: 'http://13.124.190.63/',
+      origin:true,
       credentials: true,
     }));
 } else {
@@ -57,7 +57,7 @@ app.use(expressSession({
     cookie:{
         httpOnly: true, // 자바스크립트로 http 에 접근하는 쿠키접근 방지
         secure : prod, // https 를 사용할때 true
-        domain: prod && 'http://13.124.190.63/',
+        domain: prod && 'http://13.124.180.7/',
     },
     name : 'onL' // 취약점 보호용 세션이름 변경
 }));
@@ -82,9 +82,9 @@ if (prod) {
       server: 'https://acme-v02.api.letsencrypt.org/directory',
       approveDomains: (opts, certs, cb) => {
         if (certs) {
-          opts.domains = ['api.http://13.124.190.63/'];
+          opts.domains = ['api.http://13.124.180.7/'];
         } else {
-          opts.email = 'zerohch0@gmail.com';
+          opts.email = 'thdeotjq1234@naver.com';
           opts.agreeTos = true;
         }
         cb(null, { options: opts, certs });
@@ -92,11 +92,14 @@ if (prod) {
       renewWithin: 81 * 24 * 60 * 60 * 1000,
       renewBy: 80 * 24 * 60 * 60 * 1000,
     });
-    https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443);
-    http.createServer(lex.middleware(require('redirect-https')())).listen(80);
-  } else {
+    // https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443);
+    // http.createServer(lex.middleware(require('redirect-https')())).listen(80);
     app.listen(prod ? process.env.PORT : 3065, () => {
-      console.log(`server is running on ${process.env.PORT}`);
+      console.log(`server is running on 8015`);
+    });
+  } else {
+    app.listen(3065, () => {
+      console.log(`server is running on ${prod ? process.env.PORT: 3065}`);
     });
 }
 

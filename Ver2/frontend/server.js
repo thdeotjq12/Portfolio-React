@@ -67,10 +67,10 @@ app.prepare().then( ()=> {
         });
         // https.createServer(lex.httpsOptions, lex.middleware(server)).listen(443);
         // http.createServer(lex.middleware(require('redirect-https')())).listen(80);
-        server.listen(80, () => {    });
+        server.listen(prod ? process.env.PORT : 3060, () => {    });
         
     } else {
-        server.listen(prod ? process.env.PORT : 80, () => {
+        server.listen(prod ? process.env.PORT : 3060, () => {
           console.log(`next+express running on port ${prod ? process.env.PORT : 3060}`);
         });
     }

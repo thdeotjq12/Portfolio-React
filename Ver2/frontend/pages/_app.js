@@ -72,8 +72,9 @@ Portfolio.getInitialProps = async (context) =>{
   const state = ctx.store.getState();// AppLayout 부분 SSR구조변경 
   // 리덕스 사가 호출순서 대로 코딩할 것.
   const cookie = ctx.isServer ? ctx.req.headers.cookie : '';// 클라이언트>서버 구조일땐 브라우저가 쿠키를 같이 넣어줬었는데(withCridentials:true),
-  axios.defaults.headers.Cookie = ''; 
+  
   if(ctx.isServer && cookie){ // 서버일때(SSR)와 아닐때가 있기때문에 분기처리 해줌
+    axios.defaults.headers.Cookie = ''; 
     axios.defaults.headers.Cookie = cookie; // SSR은 직접 쿠키를 넣어줘야함, 모든 axios 요청에 (로그인 정보가 들어있는) 쿠키가 들어감
   }
   if(!state.user.me){ // AppLayout 에서 !me 일때 디스패치 해줬던 것 - 스토어에서 me 정보를 가져오기
@@ -89,12 +90,13 @@ Portfolio.getInitialProps = async (context) =>{
 
 const configureStore = (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [sagaMiddleware , (store)=>(next)=>(action)=>{ //리덕스 사가 에러 찾는법 - 커스텀 미들웨어
-    // console.log(action);
-    next(action);
-  }];
+  // const middlewares = [sagaMiddleware , (store)=>(next)=>(action)=>{ //리덕스 사가 에러 찾는법 - 커스텀 미들웨어
+  //   console.log(action);
+  //   next(action);
+  // }];
+  const middlewares = [sagaMiddleware];
   // 보안상 아래 부분은 실 배포용인지 개발용인지 구분
-  const enhancer = process.env.NODE_ENV === 'production' ? compose(applyMiddleware(...middlewares),) : compose(applyMiddleware(...middlewares), !options.isServer && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f, ) 
+  const enhancer = process.env.NODE_ENV === 'production' ? compose(applyMiddleware(...middlewares),) : compose(applyMiddleware(...middlewares), !options.isServer && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,); 
   const store = createStore(reducer, initialState, enhancer);
   // 여기에 store 커스터마이징
   store.sagaTask = sagaMiddleware.run(rootSaga); //SSR 추가

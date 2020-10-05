@@ -1,11 +1,11 @@
-import React, { useEffect, useCallback } from "react";
-import { Form,  Button, Input, Card, Icon , List } from "antd";
+import React, { useCallback } from "react";
 import { useSelector , useDispatch} from 'react-redux';
 import NicknameEditForm from '../containers/NicknameEditForm'; // 폼은 state가 빈번하게 변하므로 분리를 해주자
 import PostCard from '../containers/PostCard';
 import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST, UNFOLLOW_USER_REQUEST, REMOVE_FOLLOWER_REQUEST } from "../reducers/user";
 import { LOAD_USER_POSTS_REQUEST } from "../reducers/post";
 import FollowList from '../components/FollowList';
+
 const Profile = () => {
   const dispatch = useDispatch();
   const { followerList, followingList, hasMoreFollower, hasMoreFollowing } = useSelector(state => state.user);
@@ -45,7 +45,7 @@ const Profile = () => {
       onClickStop={onUnfollow}
       ></FollowList>
       <FollowList header="팔로워 목록" 
-      data={FollowList}
+      data={followerList}
       hasMore={hasMoreFollower} 
       onClickMore={loadMoreFollowers}
       onClickStop={onRemoveFollower}
