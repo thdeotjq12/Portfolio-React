@@ -37,8 +37,7 @@ const Signup = () => {
       Router.push('/');
     }
   },[me && me.id])
-  const onSubmit = useCallback(
-    e => {
+  const onSubmit = useCallback(e => {
       e.preventDefault();
       console.log({
         id,
@@ -53,6 +52,8 @@ const Signup = () => {
       if (!term) {
         return setTermError(true);
       }
+      alert('회원가입이 완료되었습니다.');
+      Router.push('/');
       return dispatch({
         type: SIGN_UP_REQUEST,
         data:{
@@ -61,6 +62,7 @@ const Signup = () => {
           nickname: nick,
         },
       });
+
     }, [id, nick, password, passwordCheck, term]  // usecallback 안에서는 안에 쓰이는 state 전부 넣어주자
   );
   const onChangeId = e => {
@@ -138,7 +140,7 @@ const Signup = () => {
           )}
         </div>
         <div>
-          <Checkbox name="user-term" value={term} onChange={onChangeTerm}>
+          <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
             동의합니다.
           </Checkbox>
           {termError && (

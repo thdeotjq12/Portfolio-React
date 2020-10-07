@@ -53,7 +53,7 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          <Link href="http://13.124.180.7/" prefetch={false}><a target="_blank">Made by DSS</a></Link> 
+          <Link href="https://studydss.kro.kr/" prefetch={false}><a target="_blank">Made by DSS</a></Link> 
         </Col>
       </Row>
     </div>

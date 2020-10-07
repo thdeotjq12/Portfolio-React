@@ -32,6 +32,8 @@ app.prepare().then( ()=> {
         cookie:{
             httpOnly: true,
             secure: false,
+            sameSite : 'none',
+            domain : 'https://studydss.kro.kr'
         },
     }));
     // 동적 페이지들
@@ -55,7 +57,7 @@ app.prepare().then( ()=> {
           server: 'https://acme-v02.api.letsencrypt.org/directory',
           approveDomains: (opts, certs, cb) => {
             if (certs) {
-              opts.domains = ['studydss.cf', 'www.studydss.cf'];
+              opts.domains = ['studydss.kro.kr'];
             } else {
               opts.email = 'thdeotjq1234@naver.com';
               opts.agreeTos = true;

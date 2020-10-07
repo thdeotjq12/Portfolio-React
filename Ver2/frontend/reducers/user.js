@@ -93,7 +93,7 @@ export default ( state = initialState, action) => {
                     isLoggingOut : true, // 로그아웃버튼 로딩
                 };
             }
-            case LOG_OUT_REQUEST : {
+            case LOG_OUT_SUCCESS : {
                 return {
                     ...state,
                     isLoggingOut: false,

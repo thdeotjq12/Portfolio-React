@@ -15,6 +15,7 @@ const CommentForm = ({ post }) => {
     if (!me) {
       return alert('로그인이 필요합니다.');
     }
+    console.log("TEST", post)
     return dispatch({
       type: ADD_COMMENT_REQUEST,
       data: {

@@ -136,7 +136,7 @@ const PostCard = memo(({ post}) => {
     </Card>
   {commentFormOpened && (
         <>
-          <CommentForm></CommentForm>
+          <CommentForm post={post}></CommentForm>
           <List
             header={`${post.Comments ? post.Comments.length : 0} 댓글`}
             itemLayout="horizontal"

@@ -47,7 +47,7 @@ const LoginForm = () => {
         <Button type="primary" htmlType="submit" loading={isLoggingIn}>
           로그인
         </Button>
-        <Link href="/Signup">
+        <Link href="/signup">
           <a>
             <Button>회원가입</Button>
           </a>

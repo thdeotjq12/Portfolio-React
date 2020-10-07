@@ -28,7 +28,7 @@ if (prod) {
     app.use(helmet());
     app.use(morgan('combined'));
     app.use(cors({
-      origin:true,
+      origin: 'https://studydss.kro.kr/',
       credentials: true,
     }));
 } else {
@@ -57,7 +57,7 @@ app.use(expressSession({
     cookie:{
         httpOnly: true, // 자바스크립트로 http 에 접근하는 쿠키접근 방지
         secure : prod, // https 를 사용할때 true
-        domain: prod && 'http://13.124.180.7/',
+        domain: prod && '.studydss.kro.kr',
     },
     name : 'onL' // 취약점 보호용 세션이름 변경
 }));
@@ -82,7 +82,7 @@ if (prod) {
       server: 'https://acme-v02.api.letsencrypt.org/directory',
       approveDomains: (opts, certs, cb) => {
         if (certs) {
-          opts.domains = ['api.http://13.124.180.7/'];
+          opts.domains = ['api.studydss.kro.kr'];
         } else {
           opts.email = 'thdeotjq1234@naver.com';
           opts.agreeTos = true;
