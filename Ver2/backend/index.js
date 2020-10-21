@@ -28,7 +28,7 @@ if (prod) {
     app.use(helmet());
     app.use(morgan('combined'));
     app.use(cors({
-      origin: 'https://studydss.kro.kr/',
+      origin: 'https://studydss.kro.kr',
       credentials: true,
     }));
 } else {
@@ -92,11 +92,8 @@ if (prod) {
       renewWithin: 81 * 24 * 60 * 60 * 1000,
       renewBy: 80 * 24 * 60 * 60 * 1000,
     });
-    // https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443);
-    // http.createServer(lex.middleware(require('redirect-https')())).listen(80);
-    app.listen(prod ? process.env.PORT : 3065, () => {
-      console.log(`server is running on 8015`);
-    });
+    https.createServer(lex.httpsOptions, lex.middleware(app)).listen(443);
+    http.createServer(lex.middleware(require('redirect-https')())).listen(80);
   } else {
     app.listen(3065, () => {
       console.log(`server is running on ${prod ? process.env.PORT: 3065}`);
