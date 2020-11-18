@@ -1,0 +1,1 @@
+{"ast":null,"code":"var __jsx = React.createElement;\nimport React, { useState, useCallback, useEffect } from \"react\";\nimport styled from 'styled-components';\nconst SignupError = styled.div`\n  color: red;\n`;\n\nconst Portfolio = () => {\n  return __jsx(\"div\", null);\n};\n\nexport default Portfolio;","map":null,"metadata":{},"sourceType":"module"}

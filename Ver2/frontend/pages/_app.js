@@ -1,6 +1,7 @@
 // root , 모든 페이지의 레이아웃 역할
 import React from "react";
 import AppLayout from "../components/AppLayout";
+import PortfolioMain from "./portfolio";
 import PropTypes from "prop-types";
 import reducer from "../reducers"; 
 import { Provider } from 'react-redux'; // 리덕스 스테이트를 제공해줌(컴포넌트)
@@ -15,6 +16,7 @@ import Helmet from 'react-helmet';
 import App, { Container } from 'next/app'; // _document.js 에서 renderpage 랜더링 할 수 있게 해줌 (검색엔진에서 head 부분 노출시켜줌)
 const Portfolio = ({ Component, store, pageProps }) => {
   return (
+    // Next _app.js 는 props로 Component 라고 받는다. Next에서 모든 페이지를 부모 Component에 자동으로 넣어준다. 
     // Provider 가 최상위 컴포넌트이기 때문에 자식 컴포넌트들이 스토어에 접근할 수 있음
     // 스토어는 state, action, reducer 가 합쳐진 것
     <Container>

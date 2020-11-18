@@ -5,10 +5,29 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
-
+const withImages = require('next-images')
 module.exports = withBundleAnalyzer({
     distDir: '.next', // 넥스트 빌드파일 경로 변경(default: .next)
     webpack(config){ // next의 웹팩 설정(중요)
+        config.module.rules.push({ // 웹팩설정에 로더 추가함
+            test: /\.svg$/,
+            issuer: {
+              test: /\.(js|ts)x?$/,
+            },
+            use: ['@svgr/webpack'],
+          },
+          {
+            test: /\.(svg|png|jpg|gif)$/,
+            use: {
+              loader: "file-loader",
+              options: {
+                name: "[name].[ext]",
+                outputPath: "img"
+              }
+            }
+          }
+          
+          );
         const prod =  process.env.NODE_ENV === 'production';
         const plugins = [
             ...config.plugins,
@@ -31,12 +50,22 @@ module.exports = withBundleAnalyzer({
                     loader: 'webpack-ant-icon-loader',
                     enforce: 'pre',
                     include: [
-                      require.resolve('@ant-design/icons/lib/dist'), //엔티디 아이콘 트리셰이킹
+                    //   require.resolve('@ant-design/icons/lib/dist'), //엔티디 아이콘 트리셰이킹
                     ],
                   },
+                  {
+                    test: /\.(svg|png|jpg|gif)$/,
+                    use: {
+                      loader: "file-loader",
+                      options: {
+                        name: "[name].[ext]",
+                        outputPath: "img"
+                      }
+                    }
+                  }
                 ],
             },
             plugins,
         };
     },
-});
+},);
