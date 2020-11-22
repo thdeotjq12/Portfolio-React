@@ -5,10 +5,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
-const withImages = require('next-images')
-module.exports = withBundleAnalyzer({
+const withImages = require('next-images');
+module.exports = withBundleAnalyzer ({
     distDir: '.next', // 넥스트 빌드파일 경로 변경(default: .next)
-    webpack(config){ // next의 웹팩 설정(중요)
+    webpack(config){ // next의 웹팩 설정(기존 cra 웹팩에 덮어씌워짐)
         config.module.rules.push({ // 웹팩설정에 로더 추가함
             test: /\.svg$/,
             issuer: {
@@ -24,6 +24,12 @@ module.exports = withBundleAnalyzer({
                 name: "[name].[ext]",
                 outputPath: "img"
               }
+            }
+          },
+          {
+            test: /\.(jpg|jpeg|png)$/,
+            use: {
+             loader: 'url-loader'
             }
           }
           
@@ -61,6 +67,12 @@ module.exports = withBundleAnalyzer({
                         name: "[name].[ext]",
                         outputPath: "img"
                       }
+                    }
+                  },
+                  {
+                    test: /\.(jpg|jpeg|png)$/,
+                    use: {
+                     loader: 'url-loader'
                     }
                   }
                 ],

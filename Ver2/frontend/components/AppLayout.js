@@ -17,13 +17,10 @@ const AppLayout = ({ children }) => {
   }
   const awaitWindow = typeof window !== "undefined";
   const ddd =  awaitWindow && window.location.href;
-  const FFF = () =>{
-    alert(ddd);
-  }
+
   return (
-    ddd === "http://localhost:3060/portfolio" ? <Pr></Pr> :
+    ddd === "https://studydss.kro.kr/portfolio" ? <Pr></Pr> :
     <div>
-      <Button onClick={FFF}></Button>
       <Menu mode="horizontal">
         <Menu.Item key="home">
           <Link href="/">
@@ -58,9 +55,6 @@ const AppLayout = ({ children }) => {
         </Col>
         <Col xs={24} md={6}>
           {children}
-        </Col>
-        <Col xs={24} md={6}>
-          <Input></Input>
         </Col>
         
         <Col xs={24} md={6}>

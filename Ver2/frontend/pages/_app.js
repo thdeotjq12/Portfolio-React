@@ -53,9 +53,12 @@ const Portfolio = ({ Component, store, pageProps }) => {
         }]}
       >
       </Helmet>
-        <AppLayout>
+        <PortfolioMain>
+          {/* <Component {...pageProps}></Component> */}
+        </PortfolioMain>
+        {/* <AppLayout>
           <Component {...pageProps}></Component>
-        </AppLayout>
+        </AppLayout> */}
     </Provider>
    </Container>
   );
