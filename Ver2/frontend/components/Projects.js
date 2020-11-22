@@ -71,7 +71,7 @@ const ProjectLinkHref = styled.a`
     margin: 4px 0;
     border-bottom: 1px dotted #ccc;
 `
-const PostCardContent = ({ title, subTitle, text, tags, imgURL, linkURL, linkText, linkURLGit, linkTextGit }) => {
+const Projects = ({ title, subTitle, text, tags, imgURL, linkURL, linkText, linkURLGit, linkTextGit }) => {
   return (
   <ProjectItem>
     <ProjectLeftWrap>
@@ -101,8 +101,16 @@ const PostCardContent = ({ title, subTitle, text, tags, imgURL, linkURL, linkTex
   );
 };
 
-PostCardContent.propTypes = {
-
+Projects.propTypes = {
+  title :PropTypes.string.isRequired,
+  subTitle :PropTypes.string.isRequired,
+  text :PropTypes.string.isRequired,
+  tags :PropTypes.string.isRequired,
+  imgURL :PropTypes.string.isRequired,
+  linkURL :PropTypes.string.isRequired,
+  linkText :PropTypes.string.isRequired,
+  linkURLGit :PropTypes.string.isRequired,
+  linkTextGit :PropTypes.string.isRequired,
 };
 
-export default PostCardContent;
+export default Projects;
